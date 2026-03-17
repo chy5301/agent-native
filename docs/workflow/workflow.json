@@ -1,0 +1,41 @@
+{
+  "version": "1.1",
+  "initCommit": "518b6115ad426f67a38c3c57d9840d48fe18a889",
+  "taskName": "agent-native-design-guide",
+  "primaryType": "generic",
+  "secondaryTags": ["feature"],
+  "taskPrefix": "G",
+  "constraints": {
+    "maxFilesPerTask": 8,
+    "maxHoursPerTask": 3
+  },
+  "stateFiles": {
+    "analysis": "docs/workflow/TASK_ANALYSIS.md",
+    "plan": "docs/workflow/TASK_PLAN.md",
+    "status": "docs/workflow/TASK_STATUS.md",
+    "dependencyMap": "docs/workflow/DEPENDENCY_MAP.md"
+  },
+  "phases": [
+    {
+      "name": "Phase 0: 调研准备",
+      "exitCriteria": "外部设计规范已整理归档，生态图谱更新至最新状态，调研框架确立"
+    },
+    {
+      "name": "Phase 1: 核心调研",
+      "exitCriteria": "协议对比、双模架构、CLI 规范、安全模型四个方向的调研报告完成"
+    },
+    {
+      "name": "Phase 2: 设计指南",
+      "exitCriteria": "Agent-Native 设计指南四大章节（原则、接口、架构、安全）完成"
+    },
+    {
+      "name": "Phase 3: 验证与交付",
+      "exitCriteria": "最小原型验证通过，所有产出文档定稿整合"
+    }
+  ],
+  "projectContext": {
+    "description": "探索 Agent-Native 软件设计范式，产出调研报告和设计指南，为后续实现面向 Agent 的软件工具提供设计参考",
+    "buildCommand": "",
+    "testCommand": ""
+  }
+}
