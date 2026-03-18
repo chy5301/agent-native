@@ -7,7 +7,9 @@
       "Bash(git:*)",
       "Bash(uv run:*)",
       "Bash(jq:*)",
-      "WebFetch(domain:www.lovart.ai)"
+      "WebFetch(domain:www.lovart.ai)",
+      "Bash(ls -lt /d/CONGHAOYANG/Projects/tools/AI-Agent/agent-native/research/*.md)",
+      "Bash(ls:*)"
     ]
   }
 }

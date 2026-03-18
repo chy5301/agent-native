@@ -21,9 +21,11 @@
 
 - `docs/` — 方法论、设计原则
   - `docs/design-principles.md` — 设计原则文档
-  - `docs/workflow/` — 结构化工作流管理（任务规划、状态追踪）
+  - `docs/workflow/` — 结构化工作流管理
+    - `workflow.json` — 工作流配置
+    - `TASK_PLAN.md` — 任务规划与分解
+    - `TASK_STATUS.md` — 任务执行状态追踪
 - `research/` — 调研笔记、案例分析、生态图谱
-- `examples/` — 实践验证
 
 ## 调研文档命名约定
 
@@ -36,3 +38,8 @@
 ## 工作方式
 
 以调研和写作为主，不急于写代码。需要验证想法时再做原型。
+
+## 工作流管理
+
+本项目使用结构化工作流（structured-workflow）管理调研任务。
+任务规划和状态详见 `docs/workflow/TASK_STATUS.md`。
