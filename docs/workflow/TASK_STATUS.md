@@ -97,3 +97,7 @@
 - **计划变更**: 无
 - **下一任务**: G-05 调研-CLI 接口设计规范（依赖 G-01✅，可执行）
 - **遗留问题**: 无
+- **补充材料**: 2026-03-18 新增两份补充调研：
+  - `research/case-libtv-dual-interface.md` — LibTV 案例研究，展示了"Skill 即薄中继 + 后端 Agent"新双模架构模式
+  - `research/article-karpathy-levie-agents.md` — Karpathy/Levie 万亿 Agent 文章整理，含 Agent 基础设施图谱、API-first 生存条件、商业模式变迁等
+  - 同步更新了 `landscape.md`（新增 LibTV、Agent 基础设施、Levie 参考文献）和 `dual-mode-architecture.md`（新增 4.4、5.5 节）

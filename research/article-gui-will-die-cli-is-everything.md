@@ -16,7 +16,7 @@ Agent 操控计算机的方式，正在从「看屏幕点鼠标」转向「读�
 
 ## CLI-Anything
 
-有个项目叫 CLI-Anything，来自香港大学的 HKUDS 团队，已经拿到了 15000 颗星，也算是进一步把这件事挑明了。
+有个项目叫 CLI-Anything，来自香港大学的 HKUDS 团队，已经拿到了 ~18000 颗星，也算是进一步把这件事挑明了。
 
 该项目说起来，也并不复杂：**给任意软件自动生成一套 CLI 接口，让 AI Agent 能直接用命令行操控 GIMP、Blender、Audacity、LibreOffice……** 几乎你能想到的桌面软件，它都能包一层。
 

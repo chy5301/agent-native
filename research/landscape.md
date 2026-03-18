@@ -1,7 +1,7 @@
 # Agent-Native 生态图谱
 
 > 追踪正在实践 Agent-Native 理念的项目、协议和工具。
-> 最后更新：2026-03-17
+> 最后更新：2026-03-18
 
 ## Agent 运行时
 
@@ -38,7 +38,7 @@
 
 | 项目 | 做什么 | 状态 |
 |------|--------|------|
-| **CLI-Anything** (HKUDS) | 为任意桌面软件自动生成 CLI 接口，7 阶段全自动流水线 | 17.4k stars，Phase 6.5 新增 SKILL.md 自动生成 |
+| **CLI-Anything** (HKUDS) | 为任意桌面软件自动生成 CLI 接口，7 阶段全自动流水线 | ~18k stars，Phase 6.5 新增 SKILL.md 自动生成 |
 | 各云厂商 CLI | aliyun / gcloud / aws cli — 天然的 Agent 接口 | 成熟但缺少 Agent 适配（输入加固、SKILL 文件） |
 | Google Workspace CLI | Justin Poehnelt 主导，Agent-first CLI 设计范例，100+ SKILL.md | 参考实现级，七大 Agent 适配模式 |
 
@@ -48,11 +48,26 @@
 |------|------|------|
 | **A2UI** (Google) | Agent 生成声明式 UI 组件树，客户端映射到原生 widget | v0.8 公测，向 v1.0 推进 |
 | **AG-UI** (CopilotKit) | Agent-User 双向交互协议，运行时通信管道，共享状态同步 | 与 A2UI 互补，CopilotKit 是 A2UI 发布合作伙伴 |
+| **LibTV** (LiblibAI) | AI 视频创作平台：无限画布（人类）+ OpenClaw Skill（Agent），共享后端 Agent | 生产可用，GitHub 58 stars。画布编排型场景，后端模式（薄中继 Skill + IM 会话）可迁移 |
 
 **新兴标准架构模式**：
 - 控制层：CLI / MCP / A2A（面向 Agent，结构化 JSON）
 - 展示层：A2UI / AG-UI（Agent 生成声明式 UI，客户端渲染）
+- 中继模式：Skill 仅做意图转发，后端 Agent 完成实际工作（LibTV 实践）
 - 数据层：文件系统 / API（Agent 和人类共享工作空间）
+
+## Agent 基础设施
+
+> 来源：Aaron Levie《Building for trillions of agents》
+
+| 类别 | 代表项目 | 说明 |
+|------|---------|------|
+| 计算沙箱 | E2B, Daytona, Modal, Cloudflare | Agent 专属运行环境，下一代超大规模数据中心可能为 Agent 服务 |
+| 数据访问 | Box (API-first) | 企业文件的 Agent 接口 + Agent 自身的记忆存储 |
+| 身份通信 | Agentmail | Agent 专属邮箱和持久身份 |
+| 搜索 | Parallel, Exa | 为 Agent 重建的网络搜索（爬取网页的主要用户已是 Agent） |
+| 支付 | Stripe, Coinbase | Agent 钱包、预算和微支付 |
+| 安全合规 | 待建设 | Agent 工作记录的治理和留存 |
 
 ## Agent 工具开发框架
 
@@ -72,6 +87,8 @@
 | 《Terminal Is All You Need》(arXiv) | 学术论文 | 三设计属性：表征兼容性、交互媒介透明性、低参与门槛 |
 | Justin Poehnelt CLI 改造指南 | 工程实践 | 面向 Agent 的 CLI 七大改造模式，P0-P3 优先级 |
 | Google 八种多 Agent 设计模式 | 架构模式 | 顺序管道、并行扇出、监督者模式、人类在环等 |
+| Levie《Building for trillions of agents》 | 产业分析 | API-first 生存条件、Agent 基础设施图谱、"Make something agents want" |
+| Karpathy（X 回复） | 趋势判断 | "请直接给我一个能复制粘贴给 Agent 的东西"，传统 UI 对 Agent 是障碍 |
 
 ## 待调研
 
@@ -80,5 +97,7 @@
 - [ ] MCP vs CLI+Skill 的实际对比测试 → G-03 任务
 - [ ] Agent 权限模型的现有方案调研 → G-06 任务
 - [ ] 面向 Agent 的"用户体验"评估框架
-- [ ] A2UI + AG-UI 的详细架构调研 → G-04 任务
-- [ ] 各 Agent 平台（Claude Code/OpenCode/OpenClaw）的协议支持矩阵 → G-03 任务
+- [x] A2UI + AG-UI 的详细架构调研 → 已在 dual-mode-architecture.md 中覆盖
+- [x] 各 Agent 平台（Claude Code/OpenCode/OpenClaw）的协议支持矩阵 → 已在 protocol-comparison.md 中覆盖
+- [x] LibTV 双接口案例调研 → 已在 case-libtv-dual-interface.md 中覆盖
+- [x] Karpathy/Levie 万亿 Agent 文章整理 → 已在 article-karpathy-levie-agents.md 中覆盖
