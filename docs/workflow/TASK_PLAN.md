@@ -2,18 +2,35 @@
 
 ## 总体策略
 
-**整合优先 + 原型验证**
+**整合优先 + Skill 交付**
 
-不从零造轮子，整合现有成熟资源（Every.to 五原则、Justin Poehnelt CLI 规范、A2UI/AG-UI 双模方案等），在此基础上补充针对性调研、做适配性分析，最终通过一个最小原型验证关键设计假设。
+不从零造轮子，整合现有成熟资源（Every.to 五原则、Justin Poehnelt CLI 规范、A2UI/AG-UI 双模方案等），在此基础上补充针对性调研、做适配性分析，最终产出一个**可安装的设计指南 Skill**——Agent 在设计 Agent-Native 工具时可以直接调用获取设计决策参考。
 
 **选择理由**:
 - 外部已有高质量的 Agent-Native 设计原则和 CLI 规范，重新发明意义不大
 - 真正需求是"指导后续工具设计"，整合比原创更高效
-- 原型验证能暴露纯文档分析发现不了的问题
+- Skill 形态让设计指南本身成为 Agent-Native 的——Agent 可以按需查阅，而非人类翻阅长文档
 
 **目标 Agent 平台**: Claude Code、OpenCode、OpenClaw 及其扩展
-**设计指南受众**: 自用参考
+**设计指南受众**: 自用参考（Skill 形态，Agent 可直接调用）
 **设计指南定位**: 全面的范式指南，不限于特定领域
+
+**Skill 目标结构**:
+```
+skill/agent-native-design-guide/
+├── SKILL.md                        ← 入口（~2000 词，决策框架 + 快速参考）
+├── references/                     ← 详细知识库（按需加载）
+│   ├── design-principles.md        ← 设计原则体系
+│   ├── cli-interface-spec.md       ← CLI 接口设计规范
+│   ├── architecture-patterns.md    ← 架构模式
+│   ├── security-model.md           ← 安全与权限
+│   ├── protocol-comparison.md      ← 协议对比（精炼版）
+│   └── dual-mode-architecture.md   ← 双模架构（精炼版）
+└── examples/                       ← 可复制的示例
+    ├── skill-md-template.md        ← SKILL.md 模板
+    ├── cli-json-output.py          ← --json 输出示例
+    └── cli-help-design.py          ← --help 可发现性示例
+```
 
 ## 阶段里程碑
 
@@ -21,8 +38,8 @@
 |------|------|----------|
 | Phase 0 | 调研准备 | 外部设计规范已整理归档，生态图谱更新至最新状态 |
 | Phase 1 | 核心调研 | 协议对比、双模架构、CLI 规范、安全模型四个方向的调研报告完成 |
-| Phase 2 | 设计指南 | 设计指南四大章节（原则、接口、架构、安全）完成 |
-| Phase 3 | 验证与交付 | 最小原型验证通过，所有产出文档定稿整合 |
+| Phase 2 | 设计指南 | Skill 的四个 reference 文档和 examples 完成 |
+| Phase 3 | Skill 整合与交付 | SKILL.md 入口文件完成，Skill 可安装使用 |
 
 ## 任务列表
 
@@ -176,84 +193,87 @@
 
 ### Phase 2: 设计指南
 
-#### [G-07] 编写-设计原则章节
+#### [G-07] 编写-设计原则参考文档
 
 - **阶段**: Phase 2 - 设计指南
 - **依赖**: G-01, G-03, G-04
-- **目标**: 编写设计指南的"设计原则"章节，整合外部五原则与自有洞察为统一的原则体系
-- **背景信息**: 当前 docs/design-principles.md 有 7 条自拟原则（文本优先、可发现性、确定性、可组合性、最小权限、可逆性、文档即接口），外部有 Every.to 的五原则（Parity、Granularity、Composability、Emergent Capability、Improvement Over Time）。两套原则有重叠（可组合性）也有互补。需要整合为一套统一的、层次清晰的设计原则体系，并用调研中的实际案例做支撑。最终替换现有的 design-principles.md。
+- **目标**: 编写 Skill 的设计原则 reference 文档，整合外部五原则与自有洞察为统一的原则体系
+- **背景信息**: 最终产物为可安装的设计指南 Skill（`skill/agent-native-design-guide/`）。当前 docs/design-principles.md 有 7 条自拟原则（文本优先、可发现性、确定性、可组合性、最小权限、可逆性、文档即接口），外部有 Every.to 的五原则（Parity、Granularity、Composability、Emergent Capability、Improvement Over Time）。两套原则有重叠也有互补。需要整合为统一的原则体系，作为 Skill 的 reference 文件供 Agent 按需查阅。Skill reference 文件要求自包含、可独立阅读，2000-5000 词。
 - **涉及文件**:
-  - docs/design-principles.md（重写）
-  - docs/design-guide.md（新建，设计指南主文档）
+  - skill/agent-native-design-guide/references/design-principles.md（新建）
 - **具体步骤**:
   1. 对比两套原则，识别重叠和互补关系
   2. 设计统一的原则层次：核心原则（3-5 条）+ 实践原则（5-8 条）
   3. 每条原则附带：定义、为什么重要、实际示例、反面案例
-  4. 创建 design-guide.md 作为设计指南主文档，设计原则作为第一章
-  5. 更新 design-principles.md 为设计指南的原则章节
+  4. 用调研中的 Karpathy/Levie、LibTV 等案例做支撑
+  5. 确保文件自包含，Agent 无需阅读其他文件即可理解完整原则体系
 - **验收标准**:
   - [ ] 统一原则体系包含核心原则和实践原则两个层次
   - [ ] 每条原则有定义、理由、正面示例
-  - [ ] design-guide.md 主文档框架已建立
   - [ ] 与 Every.to 五原则的对应关系已说明
-- **自测方法**: 检查 design-guide.md 和 design-principles.md 的内容一致性和完整性
-- **回滚方案**: `git checkout -- docs/design-principles.md`，删除 docs/design-guide.md
+  - [ ] 文件自包含，2000-5000 词范围内
+- **自测方法**: 检查 skill/agent-native-design-guide/references/design-principles.md 的完整性和自包含性
+- **回滚方案**: 删除新建文件
 - **预估工作量**: L (约 2 小时)
 
-#### [G-08] 编写-接口设计规范章节
+#### [G-08] 编写-接口规范参考文档
 
 - **阶段**: Phase 2 - 设计指南
 - **依赖**: G-05, G-07
-- **目标**: 编写设计指南的"接口设计规范"章节，提供 CLI 命令结构、参数约定、输出格式的具体规范
-- **背景信息**: Phase 1 的 G-05 产出了 CLI 接口设计调研报告（整合 Justin Poehnelt 规范、CLI-Anything 实践、Skill 设计模式）。本任务将调研成果转化为设计指南中的可操作规范章节，包含命令设计模板、参数约定、输出格式标准、可发现性设计（--help、schema、SKILL.md）和错误处理规范。规范需要足够具体，让开发者可以直接参照实现。
+- **目标**: 编写 Skill 的 CLI 接口规范 reference 文档和代码示例，提供命令结构、参数约定、输出格式的具体规范
+- **背景信息**: Phase 1 的 G-05 产出了 CLI 接口设计调研报告（research/cli-design-spec.md）。本任务将调研成果精炼为 Skill 的 reference 文件，同时创建 examples/ 目录下的可复制代码示例。规范需要足够具体，让 Agent 可以直接参照指导工具开发。
 - **涉及文件**:
-  - docs/design-guide.md（追加接口规范章节）
+  - skill/agent-native-design-guide/references/cli-interface-spec.md（新建）
+  - skill/agent-native-design-guide/examples/cli-json-output.py（新建）
+  - skill/agent-native-design-guide/examples/cli-help-design.py（新建）
 - **具体步骤**:
   1. 从 G-05 调研报告中提取核心规范条目
   2. 编写命令结构规范：命名约定、子命令组织、全局选项
   3. 编写输出格式规范：`--json` 标准输出结构、错误输出格式、流式输出
   4. 编写可发现性规范：`--help` 格式、SKILL.md 模板、schema 自省
-  5. 附带命令设计的好/坏对比示例
+  5. 创建 examples/ 目录下的代码示例（--json 输出、--help 设计）
 - **验收标准**:
-  - [ ] 接口规范章节已追加到 design-guide.md
-  - [ ] 覆盖命令结构、参数、输出格式、可发现性、错误处理
-  - [ ] 包含 SKILL.md 模板
+  - [ ] reference 文件覆盖命令结构、参数、输出格式、可发现性、错误处理
   - [ ] 包含至少 2 组好/坏对比示例
-- **自测方法**: 检查 design-guide.md 中接口规范章节的完整性
-- **回滚方案**: `git checkout -- docs/design-guide.md`
-- **预估工作量**: M (约 1.5 小时)
+  - [ ] examples/ 下有可运行的 Python 代码示例
+  - [ ] 文件自包含，2000-5000 词范围内
+- **自测方法**: 检查 reference 文件完整性，`uv run python` 验证示例可运行
+- **回滚方案**: 删除新建文件
+- **预估工作量**: L (约 2 小时)
 
-#### [G-09] 编写-架构模式章节
+#### [G-09] 编写-架构模式参考文档
 
 - **阶段**: Phase 2 - 设计指南
 - **依赖**: G-03, G-04, G-07
-- **目标**: 编写设计指南的"架构模式"章节，提供 Agent-first 双模架构的具体方案
-- **背景信息**: Phase 1 的 G-03（协议对比）和 G-04（双模架构）产出了调研报告。本任务将调研成果转化为可落地的架构模式指南，核心是三层架构：控制层（CLI/MCP/A2A 面向 Agent）、展示层（A2UI/AG-UI/Web Dashboard 面向人类）、数据层（文件系统/API 共享工作空间）。需要为不同复杂度的工具提供不同的架构选择建议。
+- **目标**: 编写 Skill 的架构模式 reference 文档和 SKILL.md 模板示例，提供 Agent-first 双模架构的具体方案
+- **背景信息**: Phase 1 的 G-03（research/protocol-comparison.md）和 G-04（research/dual-mode-architecture.md）产出了调研报告。本任务将调研成果精炼为 Skill 的 reference 文件，核心是三层架构：控制层（CLI/MCP/A2A 面向 Agent）、展示层（A2UI/AG-UI/Web Dashboard 面向人类）、数据层（文件系统/API 共享工作空间）。同时提供 SKILL.md 模板示例供 Agent 复制使用。
 - **涉及文件**:
-  - docs/design-guide.md（追加架构模式章节）
+  - skill/agent-native-design-guide/references/architecture-patterns.md（新建）
+  - skill/agent-native-design-guide/examples/skill-md-template.md（新建）
 - **具体步骤**:
   1. 定义三层架构模式：控制层、展示层、数据层
   2. 为不同复杂度的工具提供架构选择矩阵（简单 CLI 工具 / 中等复杂度服务 / 复杂平台）
   3. 描述协议选择建议：什么场景用 CLI+Skill、什么场景加 MCP、什么场景引入 A2A
-  4. 描述展示层选择建议：纯 CLI 输出 / CLI + Streamlit 快速原型 / A2UI 声明式 UI
-  5. 附带概念架构图（文本描述）和技术栈推荐
+  4. 描述展示层选择建议：纯 CLI 输出 / --report HTML / A2UI 声明式 UI
+  5. 创建 SKILL.md 模板示例（包含 frontmatter、body 结构、触发描述最佳实践）
 - **验收标准**:
-  - [ ] 架构模式章节已追加到 design-guide.md
   - [ ] 三层架构定义清晰，各层职责明确
   - [ ] 包含不同复杂度的架构选择矩阵
-  - [ ] 包含概念架构图
-- **自测方法**: 检查 design-guide.md 中架构模式章节的完整性
-- **回滚方案**: `git checkout -- docs/design-guide.md`
+  - [ ] 包含概念架构图（文本描述）
+  - [ ] SKILL.md 模板示例可直接复制使用
+  - [ ] 文件自包含，2000-5000 词范围内
+- **自测方法**: 检查 reference 文件完整性和 SKILL.md 模板的实用性
+- **回滚方案**: 删除新建文件
 - **预估工作量**: L (约 2 小时)
 
-#### [G-10] 编写-安全与权限章节
+#### [G-10] 编写-安全与权限参考文档
 
 - **阶段**: Phase 2 - 设计指南
 - **依赖**: G-06, G-07
-- **目标**: 编写设计指南的"安全与权限"章节，提供 Agent 工具的安全设计规范
-- **背景信息**: Phase 1 的 G-06 产出了权限与安全模型调研报告（MCP OAuth 2.1、OWASP 安全指南、Claude Code 权限机制、常见威胁和防护）。本任务将调研成果转化为设计指南中的安全规范章节，包含权限模型设计、输入校验规范、安全检查清单。重点是让工具开发者能直接按照清单检查自己的实现。
+- **目标**: 编写 Skill 的安全与权限 reference 文档，提供 Agent 工具的安全设计规范和检查清单
+- **背景信息**: Phase 1 的 G-06 产出了权限与安全模型调研报告（research/security-model.md）。本任务将调研成果精炼为 Skill 的 reference 文件，包含权限模型设计、输入校验规范、安全检查清单。重点是让 Agent 能直接输出可操作的安全建议和检查清单。
 - **涉及文件**:
-  - docs/design-guide.md（追加安全与权限章节）
+  - skill/agent-native-design-guide/references/security-model.md（新建）
 - **具体步骤**:
   1. 从 G-06 调研报告中提取安全设计规范
   2. 编写权限模型设计指南：最小权限、分级授权、显式确认
@@ -261,66 +281,47 @@
   4. 编写安全检查清单：开发阶段 checklist、发布前 checklist
   5. 附带常见安全漏洞的代码示例（坏的 → 好的修复）
 - **验收标准**:
-  - [ ] 安全章节已追加到 design-guide.md
   - [ ] 权限模型设计指南完整
   - [ ] 安全检查清单可直接使用
   - [ ] 包含至少 2 个安全漏洞修复示例
-- **自测方法**: 检查 design-guide.md 中安全章节的完整性和检查清单可用性
-- **回滚方案**: `git checkout -- docs/design-guide.md`
+  - [ ] 文件自包含，2000-5000 词范围内
+- **自测方法**: 检查 reference 文件的完整性和检查清单可用性
+- **回滚方案**: 删除新建文件
 - **预估工作量**: M (约 1.5 小时)
 
 ---
 
-### Phase 3: 验证与交付
+### Phase 3: Skill 整合与交付
 
-#### [G-11] 验证-原型实现
+#### [G-11] ~~验证-原型实现~~ ❌ 已取消
 
-- **阶段**: Phase 3 - 验证与交付
-- **依赖**: G-08, G-09
-- **目标**: 用一个最小 CLI 工具原型验证设计指南中的接口规范和架构模式是否可行
-- **背景信息**: 设计指南在 Phase 2 中完成了原则、接口规范、架构模式、安全四个章节。但纯文档的指南可能存在理论和实践的脱节。本任务将按照设计指南的规范，实现一个最小的 CLI 工具原型（如一个简单的文件处理或数据转换工具），验证：命令结构规范是否合理、`--json` 输出格式是否好用、SKILL.md 的可发现性是否有效、双模输出（CLI 结构化 + 简单 Web 可视化）是否可行。验证过程中发现的问题用于反馈修正设计指南。
+> **取消原因**：最终产物调整为设计指南 Skill，Skill 本身就是产物，不需要额外的原型验证。原 G-11 的部分验证职能（代码示例）已整合到 G-08 的 examples/ 中。
+
+#### [G-12] 编写-SKILL.md 入口与整合交付
+
+- **阶段**: Phase 3 - Skill 整合与交付
+- **依赖**: G-08, G-09, G-10
+- **目标**: 编写 Skill 的 SKILL.md 入口文件，精炼调研产出为 Skill reference，整合所有产出，更新 README
+- **背景信息**: Phase 2 完成了 Skill 的四个 reference 文档（设计原则、接口规范、架构模式、安全权限）和 examples。本任务的核心是编写 SKILL.md 入口文件——这是 Skill 被 Agent 触发时首先加载的内容（~2000 词），需要包含触发描述、决策框架、快速参考表和 reference 导航索引。同时需要将 Phase 1 的 G-03（协议对比）和 G-04（双模架构）调研产出精炼为 Skill reference 版本。最后更新 README.md 反映 Skill 产出。
 - **涉及文件**:
-  - examples/minimal-tool/（新建目录）
-  - examples/minimal-tool/cli.py（新建）
-  - examples/minimal-tool/SKILL.md（新建）
-  - examples/minimal-tool/README.md（新建）
-- **具体步骤**:
-  1. 选择一个简单的工具场景（如文本分析、文件格式转换等）
-  2. 按照设计指南的接口规范实现 CLI（Click 框架、`--json` 输出、`--help` 可发现性）
-  3. 编写 SKILL.md，按照设计指南的模板
-  4. 实现最简的双模输出：CLI 结构化 JSON + 可选的简单 HTML 报告
-  5. 记录验证过程中发现的问题和设计指南需修正之处
-- **验收标准**:
-  - [ ] 原型工具可运行，CLI 命令可正常执行
-  - [ ] `--json` 输出符合设计指南的格式规范
-  - [ ] SKILL.md 内容完整，Agent 可据此理解和调用
-  - [ ] 验证发现的问题已记录
-- **自测方法**: `uv run python examples/minimal-tool/cli.py --help` 和 `--json` 输出验证
-- **回滚方案**: 删除 examples/minimal-tool/ 目录
-- **预估工作量**: L (约 2.5 小时)
-
-#### [G-12] 整合-最终交付
-
-- **阶段**: Phase 3 - 验证与交付
-- **依赖**: G-10, G-11
-- **目标**: 根据原型验证反馈修正设计指南，整合所有产出文档，更新 README
-- **背景信息**: 经过 Phase 0-2 的调研和编写，以及 Phase 3 G-11 的原型验证，所有内容已经产出但可能存在不一致或需要修正之处。本任务负责：根据 G-11 验证反馈修正设计指南、确保所有文档的交叉引用正确、更新 README.md 反映最终的项目结构和产出物、确保 design-guide.md 作为一个完整的独立文档可以被阅读。
-- **涉及文件**:
-  - docs/design-guide.md（修正）
-  - docs/design-principles.md（同步修正）
+  - skill/agent-native-design-guide/SKILL.md（新建，核心交付物）
+  - skill/agent-native-design-guide/references/protocol-comparison.md（新建，从 research/ 精炼）
+  - skill/agent-native-design-guide/references/dual-mode-architecture.md（新建，从 research/ 精炼）
   - README.md（更新）
-  - research/landscape.md（最终更新）
 - **具体步骤**:
-  1. 根据 G-11 验证记录修正设计指南中的问题
-  2. 通读 design-guide.md 全文，确保章节间逻辑连贯、术语一致
-  3. 确保 design-principles.md 与 design-guide.md 中的原则章节同步
-  4. 更新 README.md：反映最终目录结构、产出物清单、设计指南摘要
-  5. 最终检查所有文档的交叉引用和链接
+  1. 编写 SKILL.md frontmatter：name、description（触发描述，包含"设计 Agent-Native 工具""CLI 接口设计""选择协议""双模架构""安全模型"等触发短语）
+  2. 编写 SKILL.md body：决策框架（快速判断协议/架构/安全方案）、核心原则速查、CLI 设计清单、安全检查清单、reference 导航索引
+  3. 精炼 research/protocol-comparison.md → skill references 版本（保留核心对比矩阵和推荐策略，去除详细论证）
+  4. 精炼 research/dual-mode-architecture.md → skill references 版本（保留方案对比和推荐，去除协议细节）
+  5. 通读全部 Skill 文件，确保 reference 间术语一致、交叉引用正确
+  6. 更新 README.md：反映最终目录结构、Skill 安装说明、产出物清单
 - **验收标准**:
-  - [ ] design-guide.md 为完整可独立阅读的文档
-  - [ ] README.md 反映最新的项目状态和产出物
-  - [ ] 所有文档无明显的不一致或断链
-  - [ ] G-11 验证反馈已体现在设计指南中
-- **自测方法**: 通读所有 docs/ 和 research/ 下的文档，检查一致性
-- **回滚方案**: `git checkout -- docs/ README.md research/landscape.md`
-- **预估工作量**: M (约 1.5 小时)
+  - [ ] SKILL.md frontmatter description 包含明确的触发短语
+  - [ ] SKILL.md body 在 1500-2000 词范围内，包含决策框架和快速参考
+  - [ ] 6 个 reference 文件完整且自包含
+  - [ ] examples/ 目录有可用的代码示例和模板
+  - [ ] README.md 反映最新的项目状态和 Skill 安装方法
+  - [ ] Skill 目录结构符合 OpenClaw/Claude Code skill 规范
+- **自测方法**: 检查 Skill 目录完整性，模拟 Agent 触发场景验证 SKILL.md 的导航有效性
+- **回滚方案**: 删除 skill/ 目录下新建文件，`git checkout -- README.md`
+- **预估工作量**: L (约 2.5 小时)

@@ -26,15 +26,15 @@
     },
     {
       "name": "Phase 2: 设计指南",
-      "exitCriteria": "Agent-Native 设计指南四大章节（原则、接口、架构、安全）完成"
+      "exitCriteria": "Skill 的四个 reference 文档（原则、接口、架构、安全）和 examples 完成"
     },
     {
-      "name": "Phase 3: 验证与交付",
-      "exitCriteria": "最小原型验证通过，所有产出文档定稿整合"
+      "name": "Phase 3: Skill 整合与交付",
+      "exitCriteria": "SKILL.md 入口文件完成，Skill 可安装使用，README 更新"
     }
   ],
   "projectContext": {
-    "description": "探索 Agent-Native 软件设计范式，产出调研报告和设计指南，为后续实现面向 Agent 的软件工具提供设计参考",
+    "description": "探索 Agent-Native 软件设计范式，产出调研报告和可安装的设计指南 Skill，为后续实现面向 Agent 的软件工具提供设计参考",
     "buildCommand": "",
     "testCommand": ""
   }
