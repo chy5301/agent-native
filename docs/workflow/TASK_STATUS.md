@@ -46,6 +46,8 @@
 | 2026-03-17 | 目标平台为 Claude Code / OpenCode / OpenClaw | 用户确认 |
 | 2026-03-17 | Phase 0 退出标准验证通过 | 3 篇 ref-*.md 归档完成，landscape.md 扩展至 7 类，待调研清单已关联 Phase 1 任务 |
 | 2026-03-18 | 最终产物从纯文档调整为设计指南 Skill | Skill 形态让设计指南本身成为 Agent-Native 的，Agent 可按需查阅；取消 G-11 原型验证（Skill 本身就是产物） |
+| 2026-03-18 | 增量计划调整：整合新增调研成果到剩余任务 | 计划制定后新增了 7 份调研（6 份独立调研 + Anthropic Skill 经验），包含输出设计优化（5-9x 效率提升）、OWASP Agentic Top 10、反面论证、企业视角、经济学视角等关键发现。调整内容：G-05 新增"输出设计"核心维度；G-06 以 OWASP Agentic Top 10 为威胁框架并升级为 L 工作量；G-07 整合 Anthropic 9 条原则为第三套输入源并增加"边界条件"段落；G-08/G-09/G-10 补充新输入源引用；G-12 以 Anthropic Skill 写作原则指导 SKILL.md 结构。计划结构和任务拓扑不变。 |
+| 2026-03-18 | 新增 CLI-Anything 案例研究作为 G-05/G-08/G-09/G-12 输入源 | CLI-Anything (18k+ stars) 的 HARNESS.md 是"设计指南 Skill"的实战范本，其 7-Phase SOP、后端包装模式、SKILL.md 自动生成、实战 Gotchas 对我们的 CLI 规范和 Skill 结构设计有直接参考价值 |
 
 ## 交接记录
 

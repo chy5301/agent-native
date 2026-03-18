@@ -148,7 +148,7 @@ skill/agent-native-design-guide/
 - **阶段**: Phase 1 - 核心调研
 - **依赖**: G-01
 - **目标**: 整合已有 CLI 设计规范并补充调研，产出面向 Agent 的 CLI 接口设计最佳实践
-- **背景信息**: Justin Poehnelt 的《You Need to Rewrite Your CLI for AI Agents》提供了操作性强的 CLI 改造指南（`--output json`、schema 自省、输入验证等），CLI-Anything 项目展示了自动生成 Agent 友好 CLI 的实践。需要在此基础上，结合 Claude Code Skill 生态的设计模式（.claude/commands/ 下的 Markdown + YAML frontmatter）、`--help` 的可发现性设计，以及目标平台（Claude Code/OpenCode/OpenClaw）的实际调用方式，整合出一份完整的 CLI 接口设计规范。
+- **背景信息**: Justin Poehnelt 的《You Need to Rewrite Your CLI for AI Agents》提供了操作性强的 CLI 改造指南（`--output json`、schema 自省、输入验证等），CLI-Anything 项目展示了自动生成 Agent 友好 CLI 的实践。需要在此基础上，结合 Claude Code Skill 生态的设计模式（.claude/commands/ 下的 Markdown + YAML frontmatter）、`--help` 的可发现性设计，以及目标平台（Claude Code/OpenCode/OpenClaw）的实际调用方式，整合出一份完整的 CLI 接口设计规范。**新增输入源**：独立调研 `research/independent-developer-voices.md` 揭示"输出设计优化 > 工具功能"（结构化输出可减少 Agent 解析时间 5-9x），`research/independent-gui-vs-cli.md` 提供了 GUI Agent 基准数据（最佳 Agent 仅达人类水平的 47.7%）作为 CLI 路线的量化支撑，`research/article-anthropic-skill-craft.md` 提供了 Anthropic 内部 Skill 的文件夹结构和信息分层最佳实践。`research/case-cli-anything.md` 提供了 CLI-Anything 项目的 7-Phase SOP 实战案例——包含双模交互（REPL+Subcommand）、命令分组（Project/Core/IO/Config/Session）、后端包装模式（utils/<software>_backend.py）、输出格式设计（--json flag 双模输出）等具体架构决策。
 - **涉及文件**:
   - research/cli-design-spec.md（新建）
 - **具体步骤**:
@@ -156,38 +156,44 @@ skill/agent-native-design-guide/
   2. 补充 CLI-Anything 的设计选择（Click 框架、命令分组、状态管理）
   3. 调研 Claude Code Skill 的设计模式：SKILL.md 的结构、命令描述方式、参数传递约定
   4. 研究目标 Agent 平台实际如何发现和调用 CLI 工具（读 --help？读 SKILL.md？读 schema？）
-  5. 整合为统一规范：命令结构、参数约定、输出格式、可发现性、错误处理
+  5. **新增**：将"输出设计优化"作为核心维度——整合 developer-voices 调研中的发现（结构化输出格式设计、错误输出规范、进度报告格式），这直接影响 Agent 的 token 效率和任务成功率
+  6. **新增**：整合 Anthropic Skill 经验中的文件夹结构最佳实践（渐进式信息披露、context engineering）
+  7. 整合为统一规范：命令结构、参数约定、**输出设计**、可发现性、错误处理
 - **验收标准**:
-  - [ ] CLI 设计规范覆盖：命令结构、参数、输出格式、可发现性、错误处理 5 个维度
+  - [ ] CLI 设计规范覆盖：命令结构、参数、**输出设计**、可发现性、错误处理 5 个维度
+  - [ ] **输出设计**部分包含结构化输出格式规范和 Agent token 效率考量
   - [ ] 包含具体的命令设计示例（好的 vs 差的对比）
-  - [ ] 包含 SKILL.md 的推荐结构
+  - [ ] 包含 SKILL.md 的推荐结构（结合 Anthropic 经验）
   - [ ] 规范内容可直接用于后续设计指南
 - **自测方法**: 检查 cli-design-spec.md 的完整性和示例覆盖度
 - **回滚方案**: 删除 research/cli-design-spec.md
-- **预估工作量**: L (约 2 小时)
+- **预估工作量**: L (约 2.5 小时)
 
 #### [G-06] 调研-权限与安全模型
 
 - **阶段**: Phase 1 - 核心调研
 - **依赖**: G-03
 - **目标**: 产出面向 Agent 的权限边界和安全防护方案调研报告
-- **背景信息**: Agent 自主调用工具时的权限和安全问题是 Agent-Native 设计的核心关切之一。已知的安全风险包括：43% 早期 MCP Server 存在命令注入漏洞（OWASP 报告）、prompt 注入攻击、路径穿越、权限过度授予等。现有的安全方案包括：MCP 的 OAuth 2.1 强制认证（2025年3月规范更新）、Claude Code 的权限确认机制、最小权限原则的实际实现方式。需要调研这些方案并整理出面向 Agent 工具开发者的安全设计指南。
+- **背景信息**: Agent 自主调用工具时的权限和安全问题是 Agent-Native 设计的核心关切之一。已知的安全风险包括：43% 早期 MCP Server 存在命令注入漏洞（OWASP 报告）、prompt 注入攻击、路径穿越、权限过度授予等。现有的安全方案包括：MCP 的 OAuth 2.1 强制认证（2025年3月规范更新）、Claude Code 的权限确认机制、最小权限原则的实际实现方式。**新增关键输入**：独立调研 `research/independent-security-trust.md` 提供了 OWASP Agentic Top 10（2026 版，10 种 Agent 特有安全风险）、MCP 安全事件时间线（6 起重大事件）、生产环境安全数据（88% 组织已报告安全事件、仅 14.4% 获完整安全审批），以及 Agent 安全的"原罪"——Agent 需要读取外部数据但外部数据可能包含恶意指令。`research/independent-developer-voices.md` 补充了 MCP 生态的真实痛点（60 天 30+ CVE、95% 服务器质量堪忧）。
 - **涉及文件**:
   - research/security-model.md（新建）
 - **具体步骤**:
-  1. 调研 MCP 安全规范：OAuth 2.1 要求、参数 JSON Schema 验证、传输安全
-  2. 调研 OWASP MCP 安全指南的具体建议
-  3. 分析 Claude Code 的权限模型：工具调用确认、权限白名单、沙箱机制
-  4. 整理 Agent 工具的常见安全威胁和防护措施
-  5. 设计面向 Agent 工具开发者的安全检查清单
+  1. **以 OWASP Agentic Top 10 为威胁模型框架**（来自 independent-security-trust.md），覆盖 ASI01-ASI10 的全部 10 种 Agent 特有风险
+  2. 调研 MCP 安全规范：OAuth 2.1 要求、参数 JSON Schema 验证、传输安全
+  3. **整合 MCP 安全事件时间线**（来自 independent-security-trust.md），提炼真实案例的教训
+  4. 分析 Claude Code 的权限模型：工具调用确认、权限白名单、沙箱机制
+  5. 整理 Agent 工具的安全威胁和防护措施（整合 OWASP Top 10 + MCP 事件 + 生产数据）
+  6. 设计面向 Agent 工具开发者的安全检查清单
 - **验收标准**:
-  - [ ] 安全威胁清单：至少 5 种常见威胁及防护措施
+  - [ ] 安全威胁清单：覆盖 OWASP Agentic Top 10 的核心威胁及防护措施
+  - [ ] 包含 MCP 安全事件案例分析（至少 3 起）
   - [ ] 权限模型设计建议：最小权限、分级授权、确认机制
   - [ ] 安全检查清单：可直接用于工具开发的 checklist
   - [ ] MCP OAuth 2.1 和 Claude Code 权限机制已描述
-- **自测方法**: 检查 security-model.md 是否包含威胁清单和安全检查清单
+  - [ ] 包含生产环境安全数据引用
+- **自测方法**: 检查 security-model.md 是否包含 OWASP Agentic Top 10 框架、威胁清单和安全检查清单
 - **回滚方案**: 删除 research/security-model.md
-- **预估工作量**: M (约 1.5 小时)
+- **预估工作量**: L (约 2 小时)
 
 ---
 
@@ -198,19 +204,22 @@ skill/agent-native-design-guide/
 - **阶段**: Phase 2 - 设计指南
 - **依赖**: G-01, G-03, G-04
 - **目标**: 编写 Skill 的设计原则 reference 文档，整合外部五原则与自有洞察为统一的原则体系
-- **背景信息**: 最终产物为可安装的设计指南 Skill（`skill/agent-native-design-guide/`）。当前 docs/design-principles.md 有 7 条自拟原则（文本优先、可发现性、确定性、可组合性、最小权限、可逆性、文档即接口），外部有 Every.to 的五原则（Parity、Granularity、Composability、Emergent Capability、Improvement Over Time）。两套原则有重叠也有互补。需要整合为统一的原则体系，作为 Skill 的 reference 文件供 Agent 按需查阅。Skill reference 文件要求自包含、可独立阅读，2000-5000 词。
+- **背景信息**: 最终产物为可安装的设计指南 Skill（`skill/agent-native-design-guide/`）。当前有三套原则需要整合：(1) docs/design-principles.md 的 7 条自拟原则（文本优先、可发现性、确定性、可组合性、最小权限、可逆性、文档即接口），(2) Every.to 的五原则（Parity、Granularity、Composability、Emergent Capability、Improvement Over Time），(3) **新增** Anthropic 内部 Skill 打造的 9 条写作原则（`research/article-anthropic-skill-craft.md`：别说废话、Gotchas 是灵魂、文件夹做信息分层、留有灵活性、首次配置、description triggers、跨会话记忆、代码优于指令、optional hooks）。此外，独立调研提供了重要的平衡视角：`research/independent-counter-arguments.md` 指出 Agent 可靠性瓶颈（每步 85% 准确率 → 10 步仅 20% 成功率）、企业合规要求与"用完即弃"冲突等；`research/independent-enterprise-perspective.md` 提供了企业部署的真实数据（171% ROI、但 40% 项目将被取消）；`research/independent-economics-org-theory.md` 提供了 SaaS 经济学变迁和组织理论视角。原则体系需要回应这些质疑，而非回避。
 - **涉及文件**:
   - skill/agent-native-design-guide/references/design-principles.md（新建）
 - **具体步骤**:
-  1. 对比两套原则，识别重叠和互补关系
+  1. 对比三套原则体系（自拟 7 条 + Every.to 5 条 + Anthropic 9 条），识别重叠和互补
   2. 设计统一的原则层次：核心原则（3-5 条）+ 实践原则（5-8 条）
   3. 每条原则附带：定义、为什么重要、实际示例、反面案例
-  4. 用调研中的 Karpathy/Levie、LibTV 等案例做支撑
-  5. 确保文件自包含，Agent 无需阅读其他文件即可理解完整原则体系
+  4. **新增**：为核心原则添加"边界条件"或"何时不适用"段落，整合 counter-arguments 的质疑（如可靠性门槛、企业合规需求）
+  5. **新增**：整合 Anthropic 的 Skill 写作原则，特别是"Gotchas 是灵魂"和"文件夹做信息分层"作为实践原则
+  6. 用调研中的 Karpathy/Levie、LibTV、企业案例等做支撑
+  7. 确保文件自包含，Agent 无需阅读其他文件即可理解完整原则体系
 - **验收标准**:
   - [ ] 统一原则体系包含核心原则和实践原则两个层次
   - [ ] 每条原则有定义、理由、正面示例
-  - [ ] 与 Every.to 五原则的对应关系已说明
+  - [ ] 与 Every.to 五原则和 Anthropic 九条原则的对应关系已说明
+  - [ ] 核心原则包含"边界条件/何时不适用"段落
   - [ ] 文件自包含，2000-5000 词范围内
 - **自测方法**: 检查 skill/agent-native-design-guide/references/design-principles.md 的完整性和自包含性
 - **回滚方案**: 删除新建文件
@@ -221,7 +230,7 @@ skill/agent-native-design-guide/
 - **阶段**: Phase 2 - 设计指南
 - **依赖**: G-05, G-07
 - **目标**: 编写 Skill 的 CLI 接口规范 reference 文档和代码示例，提供命令结构、参数约定、输出格式的具体规范
-- **背景信息**: Phase 1 的 G-05 产出了 CLI 接口设计调研报告（research/cli-design-spec.md）。本任务将调研成果精炼为 Skill 的 reference 文件，同时创建 examples/ 目录下的可复制代码示例。规范需要足够具体，让 Agent 可以直接参照指导工具开发。
+- **背景信息**: Phase 1 的 G-05 产出了 CLI 接口设计调研报告（research/cli-design-spec.md），其中包含"输出设计优化"核心维度（结构化输出减少 Agent 解析时间 5-9x）。本任务将调研成果精炼为 Skill 的 reference 文件，同时创建 examples/ 目录下的可复制代码示例。规范需要足够具体，让 Agent 可以直接参照指导工具开发。**额外输入**：Anthropic Skill 经验（`research/article-anthropic-skill-craft.md`）中的文件夹结构最佳实践和信息分层策略可指导示例设计。CLI-Anything 的 SKILL.md 自动生成策略（`research/case-cli-anything.md`）提供了命令表结构、Agent 使用指南格式等可直接借鉴的模式。
 - **涉及文件**:
   - skill/agent-native-design-guide/references/cli-interface-spec.md（新建）
   - skill/agent-native-design-guide/examples/cli-json-output.py（新建）
@@ -246,7 +255,7 @@ skill/agent-native-design-guide/
 - **阶段**: Phase 2 - 设计指南
 - **依赖**: G-03, G-04, G-07
 - **目标**: 编写 Skill 的架构模式 reference 文档和 SKILL.md 模板示例，提供 Agent-first 双模架构的具体方案
-- **背景信息**: Phase 1 的 G-03（research/protocol-comparison.md）和 G-04（research/dual-mode-architecture.md）产出了调研报告。本任务将调研成果精炼为 Skill 的 reference 文件，核心是三层架构：控制层（CLI/MCP/A2A 面向 Agent）、展示层（A2UI/AG-UI/Web Dashboard 面向人类）、数据层（文件系统/API 共享工作空间）。同时提供 SKILL.md 模板示例供 Agent 复制使用。
+- **背景信息**: Phase 1 的 G-03（research/protocol-comparison.md）和 G-04（research/dual-mode-architecture.md）产出了调研报告。本任务将调研成果精炼为 Skill 的 reference 文件，核心是三层架构：控制层（CLI/MCP/A2A 面向 Agent）、展示层（A2UI/AG-UI/Web Dashboard 面向人类）、数据层（文件系统/API 共享工作空间）。同时提供 SKILL.md 模板示例供 Agent 复制使用。**额外输入**：`research/independent-enterprise-perspective.md` 提供了企业级部署模式（Bank of America、Siemens 等案例），`research/independent-economics-org-theory.md` 提供了 SaaS→Agent 的商业模式变迁视角，这些应融入架构选择矩阵的"企业场景"考量。Anthropic Skill 9 类型分类（`research/article-anthropic-skill-craft.md`）可指导 SKILL.md 模板的类型化设计。CLI-Anything（`research/case-cli-anything.md`）展示了后端包装模式（Agent CLI 包装真实软件而非替代）、PEP 420 namespace packages、SKILL.md 自动生成等架构实践，是"改造已有软件"场景的范本。
 - **涉及文件**:
   - skill/agent-native-design-guide/references/architecture-patterns.md（新建）
   - skill/agent-native-design-guide/examples/skill-md-template.md（新建）
@@ -271,7 +280,7 @@ skill/agent-native-design-guide/
 - **阶段**: Phase 2 - 设计指南
 - **依赖**: G-06, G-07
 - **目标**: 编写 Skill 的安全与权限 reference 文档，提供 Agent 工具的安全设计规范和检查清单
-- **背景信息**: Phase 1 的 G-06 产出了权限与安全模型调研报告（research/security-model.md）。本任务将调研成果精炼为 Skill 的 reference 文件，包含权限模型设计、输入校验规范、安全检查清单。重点是让 Agent 能直接输出可操作的安全建议和检查清单。
+- **背景信息**: Phase 1 的 G-06 产出了权限与安全模型调研报告（research/security-model.md），其中包含基于 OWASP Agentic Top 10 的完整威胁模型和 MCP 安全事件案例分析。本任务将调研成果精炼为 Skill 的 reference 文件，包含权限模型设计、输入校验规范、安全检查清单。重点是让 Agent 能直接输出可操作的安全建议和检查清单。**额外输入**：生产环境安全数据（88% 组织已报告安全事件、Shadow AI 泄露平均多花费 $670K）可增强安全建议的说服力。
 - **涉及文件**:
   - skill/agent-native-design-guide/references/security-model.md（新建）
 - **具体步骤**:
@@ -302,7 +311,7 @@ skill/agent-native-design-guide/
 - **阶段**: Phase 3 - Skill 整合与交付
 - **依赖**: G-08, G-09, G-10
 - **目标**: 编写 Skill 的 SKILL.md 入口文件，精炼调研产出为 Skill reference，整合所有产出，更新 README
-- **背景信息**: Phase 2 完成了 Skill 的四个 reference 文档（设计原则、接口规范、架构模式、安全权限）和 examples。本任务的核心是编写 SKILL.md 入口文件——这是 Skill 被 Agent 触发时首先加载的内容（~2000 词），需要包含触发描述、决策框架、快速参考表和 reference 导航索引。同时需要将 Phase 1 的 G-03（协议对比）和 G-04（双模架构）调研产出精炼为 Skill reference 版本。最后更新 README.md 反映 Skill 产出。
+- **背景信息**: Phase 2 完成了 Skill 的四个 reference 文档（设计原则、接口规范、架构模式、安全权限）和 examples。本任务的核心是编写 SKILL.md 入口文件——这是 Skill 被 Agent 触发时首先加载的内容（~2000 词），需要包含触发描述、决策框架、快速参考表和 reference 导航索引。同时需要将 Phase 1 的 G-03（协议对比）和 G-04（双模架构）调研产出精炼为 Skill reference 版本。最后更新 README.md 反映 Skill 产出。**关键设计参考**：`research/article-anthropic-skill-craft.md` 的 9 条写作原则应直接指导 SKILL.md 的结构——特别是"description triggers"（触发描述需包含足够的关键短语）、"别说废话"（只写能推动 Agent 偏离默认行为的信息）、"Gotchas 是灵魂"（预置常见设计陷阱）、"文件夹做信息分层"（SKILL.md 入口精简，reference 按需加载）。CLI-Anything 的 HARNESS.md（763 行 SOP）是"长篇设计指南 Skill"的实战范本（`research/case-cli-anything.md`），其结构（目标→SOP 阶段→关键教训→规则→目录结构）可参考。
 - **涉及文件**:
   - skill/agent-native-design-guide/SKILL.md（新建，核心交付物）
   - skill/agent-native-design-guide/references/protocol-comparison.md（新建，从 research/ 精炼）
