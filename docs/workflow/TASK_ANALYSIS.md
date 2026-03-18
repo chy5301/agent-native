@@ -20,9 +20,9 @@
 |------|------|--------|
 | `README.md` | 项目定位、核心命题、研究范围 | 框架完整 |
 | `docs/design-principles.md` | 7 条设计原则草案 | 初稿，待深化验证 |
-| `research/landscape.md` | Agent 运行时、能力封装协议、GUI→CLI 桥接生态图谱 | 框架级，待补充 |
-| `research/article-software-eaten-by-ai.md` | 全文摘录 + 核心论点 | 完整 |
-| `research/article-gui-will-die-cli-is-everything.md` | 全文摘录 + 核心论点 | 完整 |
+| `research/synthesis/landscape.md` | Agent 运行时、能力封装协议、GUI→CLI 桥接生态图谱 | 框架级，待补充 |
+| `research/articles/software-eaten-by-ai.md` | 全文摘录 + 核心论点 | 完整 |
+| `research/articles/gui-will-die-cli-is-everything.md` | 全文摘录 + 核心论点 | 完整 |
 
 ### 已建立的认知框架
 

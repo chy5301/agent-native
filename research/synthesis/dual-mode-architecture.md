@@ -374,7 +374,7 @@ AG-UI 的核心创新是 **Snapshot-Delta 模式**：
 
 ### 4.4 LibTV：Skill 即薄中继 + 后端 Agent
 
-> 详细案例分析见 `case-libtv-dual-interface.md`
+> 详细案例分析见 `../cases/libtv-dual-interface.md`
 
 LibTV（LiblibAI）是首批同时为人类和 Agent 设计的产品级实现之一。需要注意的是，LibTV 的模式有强烈的**画布/蓝图编排工作流**特征，其双接口设计中"无限画布"作为人类入口是场景特有的，不可直接迁移到所有类型的工具。但其后端架构模式（薄中继 Skill + 后端 Agent + IM 异步会话）具有通用参考价值。
 

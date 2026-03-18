@@ -92,12 +92,12 @@
 
 ## 待调研
 
-- [x] Claude Code Skill 生态的设计模式梳理 → 已在 ref-cli-for-agents.md 中覆盖
+- [x] Claude Code Skill 生态的设计模式梳理 → 已在 ../references/cli-for-agents.md 中覆盖
 - [x] CLI-Anything 的实现原理与局限性 → 已在 TASK_ANALYSIS.md 和本文中覆盖
 - [ ] MCP vs CLI+Skill 的实际对比测试 → G-03 任务
 - [ ] Agent 权限模型的现有方案调研 → G-06 任务
 - [ ] 面向 Agent 的"用户体验"评估框架
-- [x] A2UI + AG-UI 的详细架构调研 → 已在 dual-mode-architecture.md 中覆盖
-- [x] 各 Agent 平台（Claude Code/OpenCode/OpenClaw）的协议支持矩阵 → 已在 protocol-comparison.md 中覆盖
-- [x] LibTV 双接口案例调研 → 已在 case-libtv-dual-interface.md 中覆盖
-- [x] Karpathy/Levie 万亿 Agent 文章整理 → 已在 article-karpathy-levie-agents.md 中覆盖
+- [x] A2UI + AG-UI 的详细架构调研 → 已在 synthesis/dual-mode-architecture.md 中覆盖
+- [x] 各 Agent 平台（Claude Code/OpenCode/OpenClaw）的协议支持矩阵 → 已在 synthesis/protocol-comparison.md 中覆盖
+- [x] LibTV 双接口案例调研 → 已在 ../cases/libtv-dual-interface.md 中覆盖
+- [x] Karpathy/Levie 万亿 Agent 文章整理 → 已在 ../articles/karpathy-levie-agents.md 中覆盖

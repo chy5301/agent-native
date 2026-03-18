@@ -192,4 +192,4 @@
 | 《AI 正在吞噬所有软件》 | 提供了"为什么 CLI 胜出"的设计属性级解释 |
 | 《GUI 将死，CLI 才是一切》 | 学术化了"CLI 适合 Agent"的直觉判断，补充了理论框架 |
 | 设计原则（design-principles.md） | 三个设计属性可直接纳入设计原则体系 |
-| 生态图谱（landscape.md） | 论文引用的 Claude Code / Codex / Cursor 趋同观察可加入图谱的趋势分析部分 |
+| 生态图谱（../synthesis/landscape.md） | 论文引用的 Claude Code / Codex / Cursor 趋同观察可加入图谱的趋势分析部分 |

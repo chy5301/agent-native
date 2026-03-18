@@ -1,7 +1,7 @@
 # 面向 Agent 的 CLI 接口设计规范
 
 > 调研整合产出 | 任务 G-05
-> 输入源：ref-cli-for-agents.md（Justin Poehnelt 七模式）、case-cli-anything.md（HARNESS.md 实战）、independent-developer-voices.md（输出效率数据）、independent-gui-vs-cli.md（CLI vs GUI 量化对比）、article-anthropic-skill-craft.md（Anthropic Skill 经验）
+> 输入源：../references/cli-for-agents.md（Justin Poehnelt 七模式）、../cases/cli-anything.md（HARNESS.md 实战）、../independent/developer-voices.md（输出效率数据）、../independent/gui-vs-cli.md（CLI vs GUI 量化对比）、../articles/anthropic-skill-craft.md（Anthropic Skill 经验）
 > 目标：产出可直接用于 Phase 2 设计指南的 CLI 接口设计最佳实践
 
 ---

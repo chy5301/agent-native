@@ -26,14 +26,11 @@
     - `TASK_PLAN.md` — 任务规划与分解
     - `TASK_STATUS.md` — 任务执行状态追踪
 - `research/` — 调研笔记、案例分析、生态图谱
-
-## 调研文档命名约定
-
-`research/` 下的文档使用前缀分类：
-- `article-` — 外部文章的阅读笔记与提炼
-- `ref-` — 参考资料整理
-- `case-` — 案例研究
-- 无前缀 — 综合分析文档（如 `landscape.md`、`protocol-comparison.md`）
+  - `research/articles/` — 外部文章的阅读笔记与提炼
+  - `research/cases/` — 案例研究
+  - `research/references/` — 参考资料整理
+  - `research/independent/` — 独立视角与批判分析
+  - `research/synthesis/` — 综合分析与设计产出
 
 ## 工作方式
 

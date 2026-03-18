@@ -57,11 +57,11 @@
 - **完成时间**: 2026-03-17
 - **完成内容**: 深入调研并整理了 3 篇外部 Agent-Native 设计规范的结构化参考笔记
 - **修改的文件**:
-  - `research/ref-agent-native-architectures.md`（新建）— Every.to 五原则体系 + Sam Keen 语义优先架构，含对比分析和本项目适用性评估
-  - `research/ref-terminal-is-all-you-need.md`（新建）— arXiv 论文三属性模型（表征兼容性、透明性、低门槛），含 GUI 对比和设计启示
-  - `research/ref-cli-for-agents.md`（新建）— Justin Poehnelt CLI 改造七大模式，含 P0-P3 优先级排序和现有 CLI 适用性分析
+  - `research/references/agent-native-architectures.md`（新建）— Every.to 五原则体系 + Sam Keen 语义优先架构，含对比分析和本项目适用性评估
+  - `research/references/terminal-is-all-you-need.md`（新建）— arXiv 论文三属性模型（表征兼容性、透明性、低门槛），含 GUI 对比和设计启示
+  - `research/references/cli-for-agents.md`（新建）— Justin Poehnelt CLI 改造七大模式，含 P0-P3 优先级排序和现有 CLI 适用性分析
 - **验证结果**: 3 个文件均已创建，内容完整，验收标准全部满足
-- **关键决策**: 将 Sam Keen 的语义优先架构整合到 ref-agent-native-architectures.md 中（与 Every.to 形成互补对比），而非单独成文
+- **关键决策**: 将 Sam Keen 的语义优先架构整合到 references/agent-native-architectures.md 中（与 Every.to 形成互补对比），而非单独成文
 - **计划变更**: 无
 - **下一任务**: G-02 更新-生态图谱，关注补充 FastMCP v3.0、A2UI、AG-UI、A2A v0.3.0 等最新生态信息
 - **遗留问题**: 无
@@ -71,7 +71,7 @@
 - **完成时间**: 2026-03-17
 - **完成内容**: 将 landscape.md 从 3 个类别的框架级概览扩展为 7 个类别的完整生态图谱
 - **修改的文件**:
-  - `research/landscape.md`（重写）— 新增 MCP 生态详情、双模架构（A2UI/AG-UI）、Agent 工具开发框架、设计理论参考文献 4 个部分；补充现有部分的状态和细节；更新待调研清单
+  - `research/synthesis/landscape.md`（重写）— 新增 MCP 生态详情、双模架构（A2UI/AG-UI）、Agent 工具开发框架、设计理论参考文献 4 个部分；补充现有部分的状态和细节；更新待调研清单
 - **验证结果**: 7 个类别全部覆盖，A2UI/AG-UI/FastMCP/A2A 均已收录，验收标准全部满足
 - **关键决策**: 将设计理论参考文献单独列为一个类别，方便后续引用
 - **计划变更**: 无
@@ -83,7 +83,7 @@
 - **完成时间**: 2026-03-17
 - **完成内容**: 产出 MCP、CLI+Skill、A2A、OpenAPI 四种协议的深度对比报告，含 8 维度对比矩阵、3 平台支持评估、4 场景推荐和实施优先级
 - **修改的文件**:
-  - `research/protocol-comparison.md`（新建）— 完整的协议对比报告，含推荐策略：主方案 CLI+Skill，补充方案 MCP 表面
+  - `research/synthesis/protocol-comparison.md`（新建）— 完整的协议对比报告，含推荐策略：主方案 CLI+Skill，补充方案 MCP 表面
 - **验证结果**: 对比矩阵完整，场景推荐明确，平台支持评估覆盖全部目标平台
 - **关键决策**: 推荐 CLI+Skill 为主方案（覆盖面最广、开发成本最低、token 效率最高），MCP 作为补充表面按需添加；A2A 暂不投入（目标平台均无原生支持）
 - **计划变更**: 无
@@ -95,23 +95,23 @@
 - **完成时间**: 2026-03-18
 - **完成内容**: 产出 A2UI、AG-UI 深度调研 + 传统方案对比 + 用户场景推荐的双模架构报告
 - **修改的文件**:
-  - `research/dual-mode-architecture.md`（新建）— A2UI 声明式 UI 协议详解、AG-UI 事件驱动通信协议详解、传统方案对比（Streamlit/Gradio/Chainlit）、分层递进推荐方案（MVP: CLI --json + --report HTML）
+  - `research/synthesis/dual-mode-architecture.md`（新建）— A2UI 声明式 UI 协议详解、AG-UI 事件驱动通信协议详解、传统方案对比（Streamlit/Gradio/Chainlit）、分层递进推荐方案（MVP: CLI --json + --report HTML）
 - **验证结果**: A2UI/AG-UI 工作原理清晰，3+ 方案对比完整，推荐方案含架构图
 - **关键决策**: MVP 阶段推荐 CLI `--json` + `--report` HTML 静态报告（最低成本），A2UI 作为未来升级路径（等 v1.0 稳定后）
 - **计划变更**: 无
 - **下一任务**: G-05 调研-CLI 接口设计规范（依赖 G-01✅，可执行）
 - **遗留问题**: 无
 - **补充材料**: 2026-03-18 新增两份补充调研：
-  - `research/case-libtv-dual-interface.md` — LibTV 案例研究，展示了"Skill 即薄中继 + 后端 Agent"新双模架构模式
-  - `research/article-karpathy-levie-agents.md` — Karpathy/Levie 万亿 Agent 文章整理，含 Agent 基础设施图谱、API-first 生存条件、商业模式变迁等
-  - 同步更新了 `landscape.md`（新增 LibTV、Agent 基础设施、Levie 参考文献）和 `dual-mode-architecture.md`（新增 4.4、5.5 节）
+  - `research/cases/libtv-dual-interface.md` — LibTV 案例研究，展示了"Skill 即薄中继 + 后端 Agent"新双模架构模式
+  - `research/articles/karpathy-levie-agents.md` — Karpathy/Levie 万亿 Agent 文章整理，含 Agent 基础设施图谱、API-first 生存条件、商业模式变迁等
+  - 同步更新了 `synthesis/landscape.md`（新增 LibTV、Agent 基础设施、Levie 参考文献）和 `synthesis/dual-mode-architecture.md`（新增 4.4、5.5 节）
 
 ### G-05 调研-CLI 接口设计规范
 
 - **完成时间**: 2026-03-18
 - **完成内容**: 整合 6 份输入源，产出面向 Agent 的 CLI 接口设计规范，覆盖命令结构、参数设计、输出设计、可发现性、错误处理五大维度，含实施优先级和 4 组好/坏对比示例
 - **修改的文件**:
-  - `research/cli-design-spec.md`（新建，588 行）— 十节完整规范：核心认知、命令结构、参数设计、输出设计（核心新增维度）、可发现性、错误处理与安全护栏、实施优先级、好/坏对比、目标平台适配、关键结论
+  - `research/synthesis/cli-design-spec.md`（新建，588 行）— 十节完整规范：核心认知、命令结构、参数设计、输出设计（核心新增维度）、可发现性、错误处理与安全护栏、实施优先级、好/坏对比、目标平台适配、关键结论
 - **验证结果**: 5 项验收标准全部满足
 - **关键决策**:
   - 将"输出设计"提升为独立核心维度（第四节），整合 developer-voices 的 5-9x 效率数据和 MCP token 膨胀数据，论证"输出设计 > 工具功能"
@@ -126,7 +126,7 @@
 - **完成时间**: 2026-03-18
 - **完成内容**: 以 OWASP Agentic Top 10 为威胁框架，整合 MCP 安全事件、三大目标平台安全机制、新兴标准，产出面向 Agent 的权限与安全模型调研报告
 - **修改的文件**:
-  - `research/security-model.md`（新建，582 行）— 七节完整报告：核心认知（Agent 安全"原罪"、传统 IAM 失效、生产数据）、OWASP ASI01-ASI10 逐项分析（攻击场景+防护措施）、4 起 MCP/Skill 安全事件深度案例、权限模型设计（5 级分级授权+分层确认+JIT+委托链）、三平台安全机制详解与对比（Claude Code 四层防御、OpenClaw Exec 安全+ClawHub 信任、MCP OAuth 2.1）、三份安全检查清单（开发33项+发布前+运行时）、关键结论与新兴标准
+  - `research/synthesis/security-model.md`（新建，582 行）— 七节完整报告：核心认知（Agent 安全"原罪"、传统 IAM 失效、生产数据）、OWASP ASI01-ASI10 逐项分析（攻击场景+防护措施）、4 起 MCP/Skill 安全事件深度案例、权限模型设计（5 级分级授权+分层确认+JIT+委托链）、三平台安全机制详解与对比（Claude Code 四层防御、OpenClaw Exec 安全+ClawHub 信任、MCP OAuth 2.1）、三份安全检查清单（开发33项+发布前+运行时）、关键结论与新兴标准
 - **验证结果**: 6 项验收标准全部满足
 - **关键决策**:
   - 以"三层防御模型"（工具层→平台层→生态层）组织安全建议，强调工具开发者不能依赖平台防御（各平台安全能力差异巨大）
