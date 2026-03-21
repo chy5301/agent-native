@@ -84,11 +84,17 @@ Google 的 A2UI（Agent-to-User Interface）项目代表中间立场：
 
 **核心论点**：即使 Agent 用 CLI 完成所有任务，人类仍需要视觉界面来确认和监督。
 
-### 3.2 CLI-Anything 的隐含信息
+### 3.2 CLI-Anything 与 OpenCLI：CLI 化覆盖面的快速扩展
 
-CLI-Anything（港大 HKUDS）主张"Making ALL Software Agent-Native"，但其方案恰恰揭示了现实：
+CLI-Anything（港大 HKUDS）主张"Making ALL Software Agent-Native"，但其方案本身揭示了一个现实：
 - 需要为 13 个主要应用（GIMP、Blender、LibreOffice、OBS 等）**逐一生成 CLI 包装器**
 - 本质是将 **GUI 应用的能力通过 CLI 暴露给 Agent**，说明大量专业软件的核心能力仍绑定在 GUI 应用中
+
+**但 OpenCLI（2026-03）的出现显著改变了这个论述的力度**。OpenCLI 走浏览器路线（Chrome 扩展 + 本地 Daemon + CDP），将覆盖面扩展到所有 Web 应用和 Electron 应用，不需要源码、不需要逐一改造。其 AI 自发现管线（explore/synthesize/cascade）甚至让 Agent 可以自动发现陌生网站的 API 并生成适配器。
+
+两条路线合在一起：有源码桌面软件（CLI-Anything）+ 网站和 Electron 应用（OpenCLI）≈ "一切软件"的 CLI 化。
+
+**但需要注意**：浏览器路线依赖 DOM 结构和网络请求模式，稳定性不如源码路线。网站改版、应用更新都可能导致适配器失效。OpenCLI 本质上仍是一种 GUI 自动化的变体（通过 DOM 操作而非像素识别），在可靠性光谱上处于源码路线和 GUI Agent 之间
 
 ### 3.3 GUI Agent 支持者的核心论据
 
@@ -110,7 +116,7 @@ CLI-Anything（港大 HKUDS）主张"Making ALL Software Agent-Native"，但其�
 | 任务完成率 | 高 | 低（OSWorld 34.5% vs 人类 72%） | CLI |
 | 步骤效率 | 接近人类 | 比人类低 40-170% | CLI |
 | 延迟 | 毫秒级 | 秒级 | CLI |
-| 软件覆盖范围 | 仅限有 CLI/API 的 | 理论上覆盖所有 GUI 软件 | GUI |
+| 软件覆盖范围 | 快速扩展中（CLI-Anything 源码路线 + OpenCLI 浏览器路线覆盖桌面/Web/Electron） | 理论上覆盖所有 GUI 软件 | GUI（但差距在缩小） |
 | 视觉/空间任务 | 无法处理 | 可以处理 | GUI |
 | 遗留系统兼容 | 差 | 好 | GUI |
 | 人类可监督性 | 需学习或信任输出 | 直观可视 | GUI |
@@ -122,7 +128,7 @@ CLI-Anything（港大 HKUDS）主张"Making ALL Software Agent-Native"，但其�
 
 **修正为**：
 
-> CLI/工具调用是 Agent-to-Software 交互的最优路径（效率高出一个数量级），但 GUI 不会死——它会分化为两个新角色：(1) Agent-to-Legacy-Software 的桥接层（GUI 自动化/CLI 包装），(2) Agent-to-Human 的展示层（动态生成的临时 UI）。
+> CLI/工具调用是 Agent-to-Software 交互的最优路径（效率高出一个数量级），但 GUI 不会死——它会分化为两个新角色：(1) Agent-to-Legacy-Software 的桥接层（源码路线 CLI 包装 + 浏览器路线 DOM 操作，两条路线合在一起已接近覆盖"一切软件"），(2) Agent-to-Human 的展示层（动态生成的临时 UI）。
 
 ---
 
@@ -136,4 +142,5 @@ CLI-Anything（港大 HKUDS）主张"Making ALL Software Agent-Native"，但其�
 - [CircleCI: MCP vs CLI](https://circleci.com/blog/mcp-vs-cli/)
 - [A2UI (Google)](https://developers.googleblog.com/introducing-a2ui-an-open-project-for-agent-driven-interfaces/)
 - [CLI-Anything (GitHub)](https://github.com/HKUDS/CLI-Anything)
+- [OpenCLI (GitHub)](https://github.com/jackwener/opencli)
 - [o-mega: 2025-2026 Benchmarks Guide](https://o-mega.ai/articles/the-2025-2026-guide-to-ai-computer-use-benchmarks-and-top-ai-agents)

@@ -70,6 +70,8 @@ CLI-Anything 在 11 个 GUI 软件改造中沉淀出标准五组：
 
 **适用性**：不是每个工具都需要五组。简单工具可能只有 Core + IO，但命令分组的思路适用于任何超过 10 个子命令的工具。
 
+**补充模式——管线式分组**：OpenCLI 采用按流程阶段分组的方式：`explore`（发现 API）→ `synthesize`（生成适配器）→ `cascade`（检测认证）→ `generate`（一键全流程）。这适合具有明确工作流阶段的工具，与标准五组互为补充。
+
 ### 2.3 交互模型
 
 CLI-Anything 推荐 **Stateful REPL + Subcommand CLI 双模**：
@@ -259,7 +261,11 @@ my-tool records list --all --ndjson
 - 与 `jq`、`grep` 等 Unix 工具天然兼容
 - Agent 可以中途停止读取（如找到目标记录后）
 
-### 4.4 人类/Agent 双模输出
+### 4.4 多格式输出扩展
+
+除 `--json`（P0）和 NDJSON 外，OpenCLI 实践了 `-f` 参数支持多种输出格式：`-f json`、`-f yaml`、`-f md`、`-f csv`。这在需要直接嵌入不同上下文时有用（如 Markdown 输出可直接嵌入文档）。但 `--json` 应保持为 P0 首选——它最通用、最标准化。多格式支持可作为 P2 增强。
+
+### 4.5 人类/Agent 双模输出
 
 CLI-Anything 的标准模式：默认人类可读格式，`--json` 切换为机器可读。
 

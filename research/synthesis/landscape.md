@@ -1,7 +1,7 @@
 # Agent-Native 生态图谱
 
 > 追踪正在实践 Agent-Native 理念的项目、协议和工具。
-> 最后更新：2026-03-18
+> 最后更新：2026-03-21
 
 ## Agent 运行时
 
@@ -19,7 +19,7 @@
 | 协议/规范 | 思路 | 优劣 | 生态成熟度 |
 |-----------|------|------|-----------|
 | **MCP** (Model Context Protocol) | 工具描述塞进 context，JSON-RPC/stdio 通信 | 灵活、类型化调用；token 开销大，43% 早期 Server 有注入漏洞 | 高——SDK(Python/TS)、FastMCP v3.0、多个脚手架 |
-| **CLI + Skill** | Agent 读 SKILL.md 调 CLI 命令 | 轻量、可组合、确定性强；需手写 Skill 或用 CLI-Anything 生成 | 中——Claude Code/OpenClaw 原生支持 |
+| **CLI + Skill** | Agent 读 SKILL.md 调 CLI 命令 | 轻量、可组合、确定性强；可手写 Skill、用 CLI-Anything 从源码生成、或由 OpenCLI 的 AI 自发现管线自动生成 | 中——Claude Code/OpenClaw 原生支持 |
 | **A2A** (Agent-to-Agent) v0.3.0 RC1 | Agent 间直接通信，Agent Card 发现机制 | Agent 协作标准；生态尚早期 | 低→中——已移交 Linux Foundation，150+ 组织，Python/JS SDK |
 | **OpenAPI / REST** | 传统 API 描述 | 成熟生态；为人类开发者设计，非 Agent 原生 | 高——但 Agent 适配度低 |
 
@@ -36,11 +36,29 @@
 
 ## GUI → CLI 桥接
 
+两条互补路线覆盖"一切软件"的 CLI 化：
+
+### 源码路线（需要后端引擎/脚本接口）
+
 | 项目 | 做什么 | 状态 |
 |------|--------|------|
-| **CLI-Anything** (HKUDS) | 为任意桌面软件自动生成 CLI 接口，7 阶段全自动流水线 | ~18k stars，Phase 6.5 新增 SKILL.md 自动生成 |
+| **CLI-Anything** (HKUDS) | 扫描桌面软件源码，映射 GUI→API，用 Python Click 自动生成 CLI，7 阶段 SOP | ~20k stars，Phase 6.5 新增 SKILL.md 自动生成 |
 | 各云厂商 CLI | aliyun / gcloud / aws cli — 天然的 Agent 接口 | 成熟但缺少 Agent 适配（输入加固、SKILL 文件） |
 | Google Workspace CLI | Justin Poehnelt 主导，Agent-first CLI 设计范例，100+ SKILL.md | 参考实现级，七大 Agent 适配模式 |
+
+### 浏览器路线（不需要源码，通过 Chrome 扩展/CDP 桥接）
+
+| 项目 | 做什么 | 状态 |
+|------|--------|------|
+| **OpenCLI** (jackwener) | 通过 Chrome 扩展 + 本地 Daemon + WebSocket/CDP 将网站和 Electron 应用 CLI 化。复用浏览器登录态，零配置认证。双引擎：YAML 声明式 + TypeScript 编程式 | ~3.3k stars（一周），150+ 命令覆盖 36 站点/应用 |
+
+**OpenCLI 的 AI 自发现管线**——Agent 面对陌生网站可自动发现并生成适配器：
+- `explore`：自动发现网站可用 API（真实浏览器操作 + 端点评分 + 能力推断）
+- `synthesize`：从 explore 结果自动生成 YAML 适配器
+- `cascade`：五级认证策略递进探测（PUBLIC → COOKIE → HEADER → INTERCEPT → UI）
+- `generate`：一键全流程（explore → synthesize → 注册，注册部分仍 TODO）
+
+**安全注意**：OpenCLI 当前安全模型粗糙——Daemon 无身份验证、无沙箱、无权限确认、全权委托（Agent=用户浏览器权限）。详见安全模型调研。
 
 ## 双模架构（Agent 输入 + 人类可视化）
 
@@ -93,7 +111,8 @@
 ## 待调研
 
 - [x] Claude Code Skill 生态的设计模式梳理 → 已在 ../references/cli-for-agents.md 中覆盖
-- [x] CLI-Anything 的实现原理与局限性 → 已在 TASK_ANALYSIS.md 和本文中覆盖
+- [x] CLI-Anything 的实现原理与局限性 → 已在 ../cases/cli-anything.md 中覆盖
+- [x] OpenCLI 浏览器路线调研 → 已在 ../cases/opencli.md 和 ../articles/opencli-everything-cli.md 中覆盖
 - [ ] MCP vs CLI+Skill 的实际对比测试 → G-03 任务
 - [ ] Agent 权限模型的现有方案调研 → G-06 任务
 - [ ] 面向 Agent 的"用户体验"评估框架

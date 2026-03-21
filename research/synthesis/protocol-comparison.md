@@ -20,7 +20,7 @@
 - **思路**：Agent 读 SKILL.md 了解能力，通过 Bash 执行 CLI 命令
 - **传输方式**：shell 标准输入/输出
 - **核心优势**：轻量（SKILL.md 仅几百 tokens）、确定性强、可组合、无额外进程
-- **核心劣势**：需要 shell 转义处理、输出解析可能不稳定、需手写 SKILL.md 或用 CLI-Anything 生成
+- **核心劣势**：需要 shell 转义处理、输出解析可能不稳定。Skill 生成有三条路径：手写、CLI-Anything 从源码生成、OpenCLI 的 AI 自发现管线自动生成（explore → synthesize → cascade）
 - **安全考量**：需自行实现输入验证（路径穿越、控制字符、双重编码防护）
 
 ### A2A (Agent-to-Agent) v0.3.0 RC1

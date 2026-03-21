@@ -248,9 +248,69 @@ CLI-Anything 默认存在一个已有的 GUI 软件需要改造（有后端引�
 
 ---
 
+## 六、与 OpenCLI 的互补分析
+
+> 补充于 2026-03-21，基于 OpenCLI 仓库源码调研
+
+### 6.1 两条路线，覆盖"一切软件"
+
+CLI-Anything 和 OpenCLI 是两个独立项目（无代码或贡献者关联），但形成了完整的互补覆盖：
+
+| 维度 | CLI-Anything（源码路线） | OpenCLI（浏览器路线） | OpenCLI（CDP 路线） |
+|------|------------------------|---------------------|-------------------|
+| **覆盖对象** | 有后端引擎/脚本接口的桌面软件 | 任意网站 | Electron 桌面应用 |
+| **典型目标** | GIMP, Blender, LibreOffice, OBS | B 站, 知乎, Twitter, Reddit | Cursor, Notion, Discord, 飞书 |
+| **技术手段** | 扫描源码 → 映射 GUI→API → Python Click | Chrome 扩展 → WebSocket → Daemon | CDP WebSocket → 直连 Chromium 内核 |
+| **需要源码** | 是 | 否 | 否 |
+| **稳定性** | 高（直接调用 API） | 中（依赖 DOM 结构，网站改版可能破坏） | 中（依赖应用 DOM） |
+| **输出格式** | `--json` | `-f json/yaml/md/csv` |  `-f json/yaml/md/csv` |
+| **认证** | 不涉及（本地软件） | 复用浏览器 session | 复用应用 session |
+| **安全模型** | 中（沙箱化到工作目录） | 低（无认证、无沙箱、全权委托） | 低（同左） |
+
+### 6.2 自动化程度的演进
+
+```
+手动编写 CLI/Skill
+    ↓
+CLI-Anything：半自动（7 阶段 SOP，需源码，Agent 执行 HARNESS.md）
+    ↓
+OpenCLI explore/synthesize：全自动（无需源码，Agent 自动发现 API 并生成适配器）
+```
+
+**CLI-Anything 的 HARNESS.md 7 阶段 SOP**：
+- Phase 1（Codebase Analysis）是人工/Agent 驱动的——需要理解源码结构
+- 产出高质量 CLI：直接调用真实软件后端，输出精确
+- 但改造成本高，每个软件需要完整走完 7 个阶段
+
+**OpenCLI 的 AI 自发现管线（explore → synthesize → cascade → generate）**：
+- `explore` 自动发现网站 API（~300 行实现，含端点评分和能力推断）
+- `synthesize` 自动生成 YAML 适配器
+- `cascade` 五级认证策略递进探测
+- 低成本但可能不如源码路线精确（依赖 DOM 和网络请求模式）
+- `generate` 的注册部分仍是 TODO——全流程尚未完全打通
+
+**启示**：CLI-Anything 追求深度和精确性（"使用真实软件，不要重新实现"），OpenCLI 追求广度和自动化。两者的设计哲学截然不同，互为补充。
+
+### 6.3 设计决策差异
+
+**双引擎 vs 单引擎**：
+- CLI-Anything：统一使用 Python Click 框架，一种实现范式
+- OpenCLI：YAML 声明式（低门槛，Agent 可自动生成）+ TypeScript 编程式（高灵活度）。YAML 适合简单数据抓取，TS 适合复杂交互逻辑
+
+**命令分组**：
+- CLI-Anything：标准五组——Project / Core / IO / Config / Session
+- OpenCLI：按站点/应用分组，外加管线式 AI 命令（explore / synthesize / cascade / generate）
+
+**状态管理**：
+- CLI-Anything：会话文件持久化 + undo/redo + 文件锁（fcntl.flock）
+- OpenCLI：无状态——每次命令独立执行，依赖浏览器维护状态
+
+---
+
 ## 参考来源
 
 - [HKUDS/CLI-Anything GitHub 仓库](https://github.com/HKUDS/CLI-Anything)
 - HARNESS.md（763 行，项目核心 SOP）
 - 各软件的 SKILL.md（以 Blender 为代表）
 - skill_generator.py（SKILL.md 自动生成器）
+- [OpenCLI GitHub 仓库](https://github.com/jackwener/opencli)（互补分析参考）
