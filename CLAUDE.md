@@ -24,6 +24,8 @@
   - `docs/workflow/` — 结构化工作流管理
     - `workflow.json` — 工作流配置
     - `TASK_PLAN.md` — 任务规划与分解
+    - `TASK_ANALYSIS.md` — 任务分析
+    - `DEPENDENCY_MAP.md` — 依赖关系图
     - `TASK_STATUS.md` — 任务执行状态追踪
 - `research/` — 调研笔记、案例分析、生态图谱
   - `research/articles/` — 外部文章的阅读笔记与提炼
@@ -31,6 +33,10 @@
   - `research/references/` — 参考资料整理
   - `research/independent/` — 独立视角与批判分析
   - `research/synthesis/` — 综合分析与设计产出
+- `skill/` — 最终设计指南产物
+  - `skill/agent-native-design-guide/` — Agent-Native 设计指南 Skill
+    - `references/` — 参考文档（设计原则、CLI 接口规范）
+    - `examples/` — 代码示例
 
 ## 工作方式
 
@@ -40,3 +46,8 @@
 
 本项目使用结构化工作流（structured-workflow）管理调研任务。
 任务规划和状态详见 `docs/workflow/TASK_STATUS.md`。
+
+常用命令：
+- `/structured-workflow:task-exec` — 执行单个任务
+- `/structured-workflow:phase-review` — 阶段完成检查
+- `/structured-workflow:plan-adjust` — 调整计划
