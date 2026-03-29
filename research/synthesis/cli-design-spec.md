@@ -1,7 +1,7 @@
 # 面向 Agent 的 CLI 接口设计规范
 
 > 调研整合产出 | 任务 G-05
-> 输入源：../references/cli-for-agents.md（Justin Poehnelt 七模式）、../cases/cli-anything.md（HARNESS.md 实战）、../independent/developer-voices.md（输出效率数据）、../independent/gui-vs-cli.md（CLI vs GUI 量化对比）、../articles/anthropic-skill-craft.md（Anthropic Skill 经验）
+> 输入源：../references/cli-for-agents.md（Justin Poehnelt 七模式）、../cases/cli-anything.md（HARNESS.md 实战）、../independent/developer-voices.md（输出效率数据）、../independent/gui-vs-cli.md（CLI vs GUI 量化对比）、../articles/anthropic-skill-craft.md（Anthropic Skill 经验）、../articles/agent-cli-10-principles.md（Agent CLI 十原则 + agent-cli-guide 开源项目）
 > 目标：产出可直接用于 Phase 2 设计指南的 CLI 接口设计最佳实践
 
 ---
@@ -48,10 +48,15 @@ do-spreadsheet --action create
 manage --type sheets
 ```
 
+**为什么 noun-verb 对 Agent 至关重要**：Agent 发现命令的过程本质上是**树搜索**。先跑 `my-tool --help` 看到资源名词（user、project、billing），再跑 `my-tool user --help` 看到可用动词（create、list、delete）。这是确定性的、逐层缩小范围的过程——每一步都有 `--help` 可查，Agent 不需要猜测。而 verb-noun 结构（create-user、create-project）把所有操作平铺在一层，Agent 面对的是一个巨大的扁平列表，没有层级引导。同一个动词在不同名词下语义应保持一致（如 `docker container ls` → `docker volume ls`），让每个新命令都是已有模式的自然延伸。
+
 **规则**：
 
 - 使用小写 kebab-case（`my-tool`，非 `myTool` 或 `my_tool`）
 - 动词用 CRUD 语义：`create`、`list`、`get`、`update`、`delete`
+- 同一动词跨不同资源保持语义一致
+- 避免近义动词（不要同时有 `update` 和 `upgrade`）
+- 禁止 catch-all 子命令和前缀缩写（`my-tool u` 代替 `my-tool user`）——会阻止未来扩展
 - 避免缩写，除非是行业通用（`ls`、`rm`）
 
 ### 2.2 子命令分组
@@ -284,7 +289,13 @@ $ my-tool project list --json
 {"success":true,"data":[{"id":1,"name":"Project A","status":"active"},{"id":2,"name":"Project B","status":"done"}]}
 ```
 
-**检测提示**：可以通过环境变量 `CI=true` 或 `NO_COLOR=1` 自动切换为机器友好输出，但 `--json` 始终应是显式选项。
+**TTY 自动切换规则**：Agent 几乎永远在非 TTY 环境中调用 CLI。推荐的检测优先级：
+
+1. 显式 flag 最优先：`--json` / `--format json` → JSON 输出
+2. TTY 检测次之：stdout 不是 TTY 时 → 自动切换为 JSON，禁用颜色、交互提示、分页器
+3. 环境变量兜底：`CI=true` 或 `NO_COLOR=1` → 机器友好输出
+
+**关键设计决策**：非 TTY 环境下应**默认输出 JSON**，不应要求 Agent 额外加 `--json` flag。同时提供 `--yes` / `--no-interactive` 跳过所有确认提示——Agent 没法回答 `[y/N]`。AWS CLI v2 的前车之鉴：将默认 pager 改为 less 导致全球 CI 任务挂起。
 
 ### 4.5 进度与状态报告
 
@@ -437,34 +448,53 @@ Agent 读 SKILL.md 获取概览，按需深入读取 references/。不会一次�
 
 **退出码约定**：
 
+退出码对人类是可忽略的细节，对 Agent 是**控制流本身**。Agent 执行完命令后看到的第一个信号不是输出内容，是退出码——它决定了 Agent 的下一步。只用 0 和 1 远远不够。
 
-| 退出码 | 含义      |
-| --- | ------- |
-| 0   | 成功      |
-| 1   | 一般错误    |
-| 2   | 参数/用法错误 |
-| 3   | 权限不足    |
-| 4   | 依赖缺失    |
-| 126 | 命令不可执行  |
-| 127 | 命令未找到   |
+
+| 退出码 | 含义       | Agent 应对策略        |
+| --- | -------- | ----------------- |
+| 0   | 成功       | 继续管道执行            |
+| 1   | 一般错误     | 读 stderr 诊断，按情况处理 |
+| 2   | 参数/用法错误  | 修正参数后重试           |
+| 3   | 资源不存在    | 跳过或先创建资源          |
+| 4   | 权限不足     | 提示用户授权            |
+| 5   | 冲突/已存在   | 跳过或改用更新操作         |
+| 10  | 干跑通过     | 可安全执行真正操作         |
+| 126 | 命令不可执行   | 检查文件权限            |
+| 127 | 命令未找到    | 检查安装或 PATH        |
+
+**关键要求**：退出码语义必须跨版本保持稳定——改变退出码含义和改变 API 返回值一样是破坏性变更。区分瞬态错误（网络超时、限流，值得重试）和永久错误（参数错误、权限不足，不值得重试）。
 
 
 ### 6.2 `--dry-run` 安全护栏
 
-对所有变更操作（create/update/delete），支持 `--dry-run`：
+对所有变更操作（create/update/delete），支持 `--dry-run`。`--dry-run` 给 Agent 提供了**零成本的探索-验证循环**——不确定命令后果时先干跑查看，确认后再执行。
+
+**干跑输出必须是结构化 JSON diff**，不是一句"这是干跑模式"的文字提示：
 
 ```bash
 $ my-tool project delete --id 123 --dry-run --json
 {
   "dry_run": true,
   "action": "delete",
+  "resource": "project",
   "target": {"id": 123, "name": "Project A"},
-  "effects": ["Delete project and 15 associated records"],
+  "effects": [
+    {"type": "delete", "resource": "project", "id": 123},
+    {"type": "delete", "resource": "record", "count": 15, "reason": "cascade"}
+  ],
   "reversible": false
 }
 ```
 
-**Agent 工作流**：Agent 先 `--dry-run` 查看影响范围，确认后再真正执行。对于不可逆操作，SKILL.md 中应明确指导"始终先 dry-run"。
+**规范要求**：
+
+- 干跑输出应明确列出什么会被创建、修改或删除
+- 干跑成功使用专用退出码 **10**（区分于真正执行成功的退出码 0），Agent 可据此判断是否安全执行
+- 破坏性命令（delete、drop、reset）在 TTY 模式下应额外要求 `--force` 确认
+- 对于不可逆操作，SKILL.md 中应明确指导"始终先 dry-run"
+
+**Agent 工作流**：`--help` 发现命令 → `--dry-run` 预览后果 → 确认无误后真正执行。这个三步循环是 Agent 安全使用 CLI 的标准路径。
 
 ### 6.3 `--sanitize` 防御间接 Prompt 注入
 
@@ -491,7 +521,49 @@ my-tool email get --id 456 --json --sanitize
 
 ---
 
-## 七、实施优先级
+## 七、幂等性设计
+
+> Agent 会重试。网络超时重试、执行结果不确定重试、任务中断恢复后还是重试。非幂等命令意味着重试会创建重复资源、发送重复消息、产生重复扣费。
+
+### 7.1 声明式优于命令式
+
+```bash
+# 命令式：资源已存在会报错，重试即失败
+my-tool user create --name "john"         # 第二次运行 → 错误
+
+# 声明式：无论调用多少次，结果一致
+my-tool user ensure --name "john"         # 始终成功
+# 或
+my-tool user create --name "john" --if-not-exists
+```
+
+**kubectl apply 是黄金标准**：定义期望状态，系统自动协调实际状态。不管 Agent 跑多少次 `kubectl apply -f deployment.yaml`，结果都一样。
+
+### 7.2 设计规则
+
+| 模式 | 实现方式 | 适用场景 |
+|------|---------|---------|
+| `--if-not-exists` | 资源已存在时静默成功（退出码 0） | create 操作 |
+| `--if-exists` | 资源不存在时静默成功 | delete 操作 |
+| 声明式动词 | `ensure`、`apply`、`sync` 替代 `create` | 全状态管理 |
+| 冲突退出码 | 资源已存在返回退出码 **5**（而非通用错误 1） | Agent 区分冲突与其他错误 |
+| 幂等键 | `--idempotency-key <uuid>` | 天然非幂等操作（发消息、扣款） |
+
+### 7.3 幂等键模式
+
+对于天然无法幂等的操作（如发送消息），通过幂等键保证安全重试：
+
+```bash
+# Agent 生成唯一标识符，即使命令被重复执行，服务端只处理一次
+my-tool message send --to user@example.com --body "Hello" \
+  --idempotency-key "550e8400-e29b-41d4-a716-446655440000"
+```
+
+飞书 CLI 的 `+messages-send` 已支持 `--idempotency-key`，这个设计应更广泛地应用到所有有副作用的操作。
+
+---
+
+## 八、实施优先级
 
 渐进式实施路径，从最小改动开始：
 
@@ -503,7 +575,10 @@ my-tool email get --id 456 --json --sanitize
 | **P0** | 结构化错误输出                     | 低   | Agent 可自行修正错误   |
 | **P1** | `--fields` 字段掩码             | 低   | 上下文窗口保护         |
 | **P1** | Schema 自省 / `--help --json` | 中   | 运行时可发现性         |
-| **P1** | `--dry-run`                 | 中   | 变更前验证           |
+| **P1** | `--dry-run`（输出 JSON diff + 退出码 10） | 中   | 变更前验证           |
+| **P1** | 细粒度退出码（0-5, 10）             | 低   | Agent 控制流决策      |
+| **P1** | `--if-not-exists` / 幂等键     | 中   | 安全重试             |
+| **P1** | TTY 检测 + 非 TTY 默认 JSON     | 低   | 自动适配 Agent 环境   |
 | **P2** | SKILL.md                    | 低-中 | Agent 平台集成      |
 | **P2** | NDJSON 流式输出                 | 低   | 大数据集支持          |
 | **P3** | MCP 表面                      | 高   | 适用于 API 型 CLI   |
@@ -514,7 +589,7 @@ my-tool email get --id 456 --json --sanitize
 
 ---
 
-## 八、好/坏设计对比
+## 九、好/坏设计对比
 
 ### 对比 1：输出设计
 
@@ -571,7 +646,7 @@ $ good-tool spreadsheet delete --id 123
 
 ---
 
-## 九、目标平台适配
+## 十、目标平台适配
 
 不同 Agent 平台发现和调用 CLI 工具的方式不同：
 
@@ -594,15 +669,17 @@ $ good-tool spreadsheet delete --id 123
 
 ---
 
-## 十、关键结论
+## 十一、关键结论
 
 1. **输出设计 > 工具功能**——结构化输出优化可能比增加新功能更能提升 Agent 效率（5-9x 实测改善）
-2. `**--json` 是最小可行 Agent 适配**——一个 flag 就能让现有 CLI 对 Agent 可用
+2. **`--json` 是最小可行 Agent 适配**——一个 flag 就能让现有 CLI 对 Agent 可用
 3. **Agent 不是可信操作者**——输入加固不是可选项，是安全基线
-4. **SKILL.md 是 Agent 时代的 README**——编码 `--help` 无法表达的领域知识和使用规范
-5. **Gotchas 是 Skill 的灵魂**——从实际 Agent 踩坑中持续积累，不可预先设计
-6. **文件夹是上下文管理工具**——用文件系统做渐进式信息披露，避免一次性加载全部上下文
-7. **先做 P0 再说**——`--json` + 输入验证 + 结构化错误输出覆盖 80% 场景，不需要从头重写
+4. **幂等性是 Agent 场景的刚需**——人类很少重试，Agent 经常重试，非幂等命令在 Agent 场景下是定时炸弹
+5. **退出码从细节变成控制流**——Agent 看到的第一个信号是退出码而非输出内容，细粒度退出码是 Agent 决策的基础
+6. **SKILL.md 是 Agent 时代的 README**——编码 `--help` 无法表达的领域知识和使用规范
+7. **Gotchas 是 Skill 的灵魂**——从实际 Agent 踩坑中持续积累，不可预先设计
+8. **文件夹是上下文管理工具**——用文件系统做渐进式信息披露，避免一次性加载全部上下文
+9. **先做 P0 再说**——`--json` + 输入验证 + 结构化错误输出覆盖 80% 场景，不需要从头重写
 
 ---
 
@@ -614,4 +691,7 @@ $ good-tool spreadsheet delete --id 123
 - DEV 社区,《Your AI Coding Agents Are Slow Because Your Tools Talk Too Much》— 输出效率实测
 - CircleCI,《MCP vs CLI》— Token 效率对比数据
 - arXiv:2603.10664,《Terminal Is All You Need》— GUI vs CLI 量化基准
+- Johnixr,《给 Agent 设计 CLI 的十个原则》— 十原则体系 + agent-cli-guide 开源项目
+- Lightning Labs, lnget PR#14 — Agent-CLI 设计轴（干跑退出码、输入验证规则）
+- Berkeley BFCL V4 — 函数调用准确率基准
 
