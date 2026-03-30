@@ -52,7 +52,7 @@ Agent-Native 架构的本质是**一个内核，两个入口**——Agent 和人
 - 能力自描述——`--help --json` 或 `schema` 子命令（原则 P1）
 - SKILL.md 提供高层语义描述（原则 P5）
 
-**协议选择**：默认 CLI+Skill，复杂场景可叠加 MCP 表面（详见第 2 节）。具体 CLI 设计规范见 `cli-interface-spec.md`。
+**协议选择**：默认 CLI+Skill，复杂场景可叠加 MCP 表面（详见第 2 节）。
 
 ### 1.2 展示层
 

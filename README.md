@@ -6,6 +6,8 @@
 
 这是一个研究与实践工作空间，探索 **Agent-Native** 软件设计范式——当软件的主要用户从人类变成 Agent 时，设计、构建和分发软件的方式将发生根本性的转变。
 
+**最终产物**：Agent-Native 设计指南 Skill —— 一个可安装到 Claude Code / OpenClaw 的设计指南，帮助 Agent 在设计和构建面向 Agent 的工具时做出正确的设计决策。
+
 ## 核心命题
 
 ### 范式转移
@@ -23,13 +25,35 @@
 4. **信任度**：Agent 为什么优先调用你而不是别人？
 5. **权限边界**：Agent 能干 ≠ Agent 该干，谁来兜底？
 
+## 产出物：设计指南 Skill
+
+```
+skill/agent-native-design-guide/
+├── SKILL.md                          # 入口：决策框架 + 原则速查 + 导航索引
+├── references/
+│   ├── design-principles.md          # 十原则体系（4 核心 + 6 实践）
+│   └── architecture-patterns.md      # 三层架构 + 协议选择 + 复杂度分级
+└── examples/
+    ├── cli-json-output.py            # 标准 JSON 信封结构示例
+    └── cli-help-design.py            # Agent 友好 --help 示例
+```
+
+### 安装使用
+
+将 `skill/agent-native-design-guide/` 目录复制到 Claude Code 的 skills 目录，或作为 Plugin 的 skill 组件引用。当你在设计面向 Agent 的工具时，Agent 会自动触发此指南。
+
 ## 目录结构
 
 ```
 agent-native/
-├── docs/            # 方法论、设计原则、架构思考
-├── research/        # 调研笔记、案例分析、行业观察
-└── examples/        # 实践案例、原型验证
+├── docs/              # 方法论、设计原则、工作流管理
+├── research/          # 调研笔记、案例分析、行业观察
+│   ├── articles/      # 外部文章的阅读笔记与提炼
+│   ├── cases/         # 案例研究
+│   ├── references/    # 参考资料整理
+│   ├── independent/   # 独立视角与批判分析
+│   └── synthesis/     # 综合分析与设计产出
+└── skill/             # 最终产物：设计指南 Skill
 ```
 
 ## 研究范围

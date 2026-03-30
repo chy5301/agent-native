@@ -10,7 +10,8 @@
       "Bash(ls -lt /d/CONGHAOYANG/Projects/tools/AI-Agent/agent-native/research/*.md)",
       "Bash(ls:*)",
       "Bash(find /d/CONGHAOYANG/Projects/tools/AI-Agent/agent-native/research -type f -name *.md -o -name *.txt -o -name *.json)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(wc:*)"
     ]
   }
 }

@@ -11,8 +11,8 @@
 | Phase 0: 调研准备 | 2 | 2 | 0 | 0 | 0 |
 | Phase 1: 核心调研 | 4 | 4 | 0 | 0 | 0 |
 | Phase 2: 设计指南 | 4 | 4 | 0 | 0 | 0 |
-| Phase 3: Skill 整合与交付 | 2 | 0 | 0 | 1 | 1 |
-| **合计** | **12** | **10** | **0** | **1** | **1** |
+| Phase 3: Skill 整合与交付 | 2 | 1 | 0 | 0 | 1 |
+| **合计** | **12** | **11** | **0** | **0** | **1** |
 
 ## 任务状态
 
@@ -29,7 +29,7 @@
 | G-09 | 编写-架构模式参考文档 | Phase 2 | ✅ 已完成 | G-03, G-04, G-07 |
 | G-10 | 编写-安全与权限参考文档 | Phase 2 | ✅ 已完成 | G-06, G-07 |
 | G-11 | ~~验证-原型实现~~ | Phase 3 | ❌ 已取消 | — |
-| G-12 | 编写-SKILL.md 入口与整合交付 | Phase 3 | ⬜ 待开始 | G-08, G-09, G-10 |
+| G-12 | 编写-SKILL.md 入口与整合交付 | Phase 3 | ✅ 已完成 | G-08, G-09, G-10 |
 
 状态图例: ⬜ 待开始 | 🔄 进行中 | ✅ 已完成 | ⏸️ 暂停 | ❌ 已取消 | 🔀 已拆分
 
@@ -51,6 +51,7 @@
 | 2026-03-18 | Phase 1 退出标准验证通过 | 4 份核心调研报告全部完成（共 1875 行），退出标准逐项验证通过；8 份补充调研已整合到后续任务计划；Phase 2/3 任务前提条件和步骤仍然准确，无需调整 |
 | 2026-03-19 | G-07 原则体系设计为 4 核心 + 6 实践 | 三套输入源（自拟 7 条 + Every.to 5 条 + Anthropic 9 条）通过抽象合并为 10 条统一原则，避免条目过多；核心原则回答"为什么"（含边界条件），实践原则回答"怎么做" |
 | 2026-03-29 | Phase 2 退出标准验证通过 | 4 个 reference 文档 + 3 个 examples 全部完成；变更审计发现 0 🔴 / 1 🟡（已修正：G-09 补充经济学视角）/ 4 🔵（记录供后续参考）；补充调研整合度总体约 90%，所有文件间交叉引用一致 |
+| 2026-03-30 | G-12 精简方案：从 6 references 精简为 2 references | 对标 plugin-dev 金标准（Skill 总内容量 2,300-4,500 词），原计划 6 个 reference（~10,000+ 词）严重超标。cli-interface-spec 和 security-model 的实操内容与 plugin-dev 系列重叠，skill-md-template 与 skill-development 重叠。精简后保留独特价值（设计原则+架构思维），删除 3 个冗余文件，总量从 ~6,753 降至 ~3,593 词 |
 
 ## 交接记录
 
@@ -227,4 +228,33 @@
   - 平台安全机制部分用"三层防御定位"总结——明确工具层是唯一可控防线，引导开发者不要依赖平台
 - **计划变更**: 无
 - **下一任务**: G-12（编写-SKILL.md 入口与整合交付，依赖 G-08✅ G-09✅ G-10✅，可执行）。Phase 2 全部完成，建议先执行 Phase 2 回顾再进入 Phase 3
+- **遗留问题**: 无
+
+### G-12 编写-SKILL.md 入口与整合交付
+
+- **完成时间**: 2026-03-30
+- **完成内容**: 以精简方案（方向 A）完成 Skill 整合交付。对标 plugin-dev 金标准后，将原计划的 6 个 reference 精简为 2 个，删除 3 个与现有 Skill 重叠的文件，创建 SKILL.md 入口文件，更新 README.md
+- **修改的文件**:
+  - `skill/agent-native-design-guide/SKILL.md`（新建，~1,323 词）— Skill 入口：决策框架（是否需要 Agent-Native 改造/协议选择/架构选择）、十原则速查表（C1-C4 + P1-P6）、三大反模式、CLI 设计检查清单、安全要点、reference 导航索引、Gotchas 占位
+  - `skill/agent-native-design-guide/references/architecture-patterns.md`（修改）— 删除对已移除文件 cli-interface-spec.md 的交叉引用
+  - `skill/agent-native-design-guide/references/design-principles.md`（修改）— 删除对已移除文件 security-model.md 的交叉引用
+  - `skill/agent-native-design-guide/references/cli-interface-spec.md`（删除）— 实操内容与 plugin-dev 系列重叠
+  - `skill/agent-native-design-guide/references/security-model.md`（删除）— 过于专业化，与 plugin-dev 重叠
+  - `skill/agent-native-design-guide/examples/skill-md-template.md`（删除）— 与 plugin-dev:skill-development 重叠
+  - `README.md`（更新）— 新增产出物章节（Skill 目录结构 + 安装说明）、更新目录结构
+- **验证结果**: 7 项验收标准全部满足
+  - ✅ SKILL.md description 使用第三人称 + 10 个触发短语
+  - ✅ SKILL.md body 祈使句风格，~1,323 词（在 skill-reviewer 可接受范围 1,000-3,000 内，略低于原目标 1,500 但内容完整无冗余）
+  - ✅ 仅保留 2 个 reference 文件，无断裂引用（grep 验证通过）
+  - ✅ examples/ 有 2 个可运行 Python 示例
+  - ✅ 已删除 3 个冗余文件
+  - ✅ README.md 反映最新状态
+  - ✅ Skill 总内容量 ~3,593 词（符合金标准 2,300-4,500 词范围）
+- **关键决策**:
+  - 采用方向 A（精简为"设计原则" Skill），聚焦独特价值（设计原则+架构思维），砍掉与 plugin-dev 重叠的实操内容
+  - SKILL.md 采用全英文祈使句风格（Skill body 是给 Claude 的操作指令），references 保持中文（面向人类开发者阅读）
+  - SKILL.md 包含 CLI 设计检查清单和安全要点作为速查（从被删除的 reference 中提炼核心条目内联到 SKILL.md），确保关键实操知识不丢失
+  - 删除的 3 个文件（cli-interface-spec.md、security-model.md、skill-md-template.md）仍保留在 research/synthesis/ 的完整调研版本中，需要时可查阅
+- **计划变更**: G-12 交付范围从原计划的"6 references + 3 examples + SKILL.md"精简为"2 references + 2 examples + SKILL.md"
+- **下一任务**: 全部任务已完成。建议执行 Phase 3 阶段回顾以正式收尾整个工作流
 - **遗留问题**: 无

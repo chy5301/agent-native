@@ -255,4 +255,4 @@ P6 约束意图     [███████████]           [████�
 █ = 强适用  ░ = 需调整
 ```
 
-开发者工具场景（CLI+Skill、Agent-First、高自主度）是本原则体系的主要适用区域。企业业务系统场景需要额外考虑：可审计性设计、授权层级（HITL）、优雅降级、成本可预测性、多 Agent 编排兼容。这些维度在安全与权限参考文档（`references/security-model.md`）和架构模式参考文档（`references/architecture-patterns.md`）中详细展开。
+开发者工具场景（CLI+Skill、Agent-First、高自主度）是本原则体系的主要适用区域。企业业务系统场景需要额外考虑：可审计性设计、授权层级（HITL）、优雅降级、成本可预测性、多 Agent 编排兼容。这些维度在架构模式参考文档（`references/architecture-patterns.md`）中详细展开。
