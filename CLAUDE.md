@@ -10,6 +10,8 @@
 
 设计指南 Skill —— 将调研成果转化为可被 Agent 使用的设计指南。
 
+**Plugin 打包**：如需将 Skill 打包为 Claude Code Plugin 进行分发，参见 `PLUGIN_BUILD_GUIDE.md`。
+
 ## 核心命题
 
 1. **GUI 是给人类的翻译层，Agent 不需要它。** CLI+Skill 是 Agent 时代的原生交互方式。
@@ -35,8 +37,10 @@
   - `research/synthesis/` — 综合分析与设计产出
 - `skill/` — 最终设计指南产物
   - `skill/agent-native-design-guide/` — Agent-Native 设计指南 Skill
-    - `references/` — 参考文档（设计原则、CLI 接口规范）
-    - `examples/` — 代码示例
+    - `SKILL.md` — Skill 入口（决策框架 + 原则速查 + 导航索引）
+    - `references/` — 参考文档（设计原则、架构模式）
+    - `examples/` — 可运行代码示例（JSON 信封、Agent 友好 --help）
+- `PLUGIN_BUILD_GUIDE.md` — Plugin 打包构建指南
 
 ## 工作方式
 
