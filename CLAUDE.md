@@ -12,6 +12,8 @@
 
 **Plugin 打包**：如需将 Skill 打包为 Claude Code Plugin 进行分发，参见 `PLUGIN_BUILD_GUIDE.md`。
 
+**已发布的 Plugin 副本**：[chy5301/cc-plugins](https://github.com/chy5301/cc-plugins) 仓库的 `agent-native-design-guide/` 目录。本项目是调研源头和开发工作区，Plugin 副本是面向分发的打包产物。更新 Skill 内容后需同步到 Plugin 副本。
+
 ## 核心命题
 
 1. **GUI 是给人类的翻译层，Agent 不需要它。** CLI+Skill 是 Agent 时代的原生交互方式。
