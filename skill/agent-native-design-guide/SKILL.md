@@ -123,8 +123,9 @@ When implementing or reviewing a CLI tool for agent use, verify:
 - [ ] Command naming follows `<tool> <resource> <action>` pattern
 - [ ] Input validation at CLI entry point (path normalization, schema validation, reject dangerous characters)
 - [ ] Error responses include error code (machine-readable) + message + recovery suggestion
-- [ ] Exit codes follow convention (0=success, 1=error, 2=usage error, 3=permission denied)
+- [ ] Exit codes follow semantic convention (0=success, 1=general error, 2=usage/argument error, 3=resource not found, 4=permission denied, 10=dry-run preview)
 - [ ] `--dry-run` for destructive operations
+- [ ] `--no-interactive` mode: suppress prompts, pagers, and confirmation dialogs (lesson: AWS CLI v2 defaulting to `less` pager broke thousands of CI pipelines in 2019)
 - [ ] `--fields` for output field masking (context window protection)
 
 Working code examples: `examples/cli-json-output.py` (JSON envelope) and `examples/cli-help-design.py` (agent-friendly `--help`).
