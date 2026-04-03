@@ -42,6 +42,10 @@ skill/agent-native-design-guide/
 
 将 `skill/agent-native-design-guide/` 目录复制到 Claude Code 的 skills 目录，或作为 Plugin 的 skill 组件引用。当你在设计面向 Agent 的工具时，Agent 会自动触发此指南。
 
+**Plugin 打包**：如需将 Skill 打包为 Claude Code Plugin 进行分发，参见 [`PLUGIN_BUILD_GUIDE.md`](PLUGIN_BUILD_GUIDE.md)。
+
+**已发布的 Plugin 副本**：[chy5301/cc-plugins](https://github.com/chy5301/cc-plugins) 仓库的 `agent-native-design-guide/` 目录。本项目是调研源头和开发工作区，Plugin 副本是面向分发的打包产物。更新 Skill 内容后需同步到 Plugin 副本。
+
 ## 目录结构
 
 ```
