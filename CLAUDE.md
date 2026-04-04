@@ -25,12 +25,7 @@
 
 - `docs/` — 方法论、设计原则
   - `docs/design-principles.md` — 设计原则文档
-  - `docs/workflow/` — 结构化工作流管理
-    - `workflow.json` — 工作流配置
-    - `TASK_PLAN.md` — 任务规划与分解
-    - `TASK_ANALYSIS.md` — 任务分析
-    - `DEPENDENCY_MAP.md` — 依赖关系图
-    - `TASK_STATUS.md` — 任务执行状态追踪
+  - `docs/workflow/archive/` — 已归档的工作流记录
 - `research/` — 调研笔记、案例分析、生态图谱
   - `research/articles/` — 外部文章的阅读笔记与提炼
   - `research/cases/` — 案例研究
@@ -48,12 +43,6 @@
 
 以调研和写作为主，不急于写代码。需要验证想法时再做原型。
 
-## 工作流管理
+## 工作流记录
 
-本项目使用结构化工作流（structured-workflow）管理调研任务。
-任务规划和状态详见 `docs/workflow/TASK_STATUS.md`。
-
-常用命令：
-- `/structured-workflow:task-exec` — 执行单个任务
-- `/structured-workflow:phase-review` — 阶段完成检查
-- `/structured-workflow:plan-adjust` — 调整计划
+初始调研工作流（2026-03-17 ~ 2026-04-04）已归档至 `docs/workflow/archive/20260404-generic-agent-native-design-guide/`。如需开展新一轮大型任务，使用 `/structured-workflow:workflow-init` 初始化。
